@@ -1,0 +1,503 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>Viper | 惜寞</title><meta name="keywords" content="Go,Viper"><meta name="author" content="惜寞"><meta name="copyright" content="惜寞"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="Viper"><meta name="application-name" content="Viper"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="Viper"><meta property="og:url" content="https://lonesome.cn/Go%20Web/Viper/index.html"><meta property="og:site_name" content="惜寞"><meta property="og:description" content="精弘网络暑期后端 Go Web 开发基础课程"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://download.tooc.xlj0.com/uploads/160/blog/img/1694112437750.jpg?_r_=77cbc0fa-73ad-a19c-72c7-0ce9c6beeb15"><meta property="article:author" content="惜寞"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://download.tooc.xlj0.com/uploads/160/blog/img/1694112437750.jpg?_r_=77cbc0fa-73ad-a19c-72c7-0ce9c6beeb15"><meta name="description" content="精弘网络暑期后端 Go Web 开发基础课程"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://lonesome.cn/Go%20Web/Viper/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f7df12d76bd74a3406a8c37585ebb53a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: {"enable":true,"img":"https://upload-bbs.miyoushe.com/upload/2023/09/03/125766904/ee23df8517f3c3e3efc4145658269c06_5714860933110284659.png"},
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: {"enable":true,"ck":"3GI2R5ow93lZOl7w","LingQueMonitorID":"3GI2R5ow93lZOl7w"},
+  greetingBox: {"enable":true,"default":"晚上好~","list":[{"greeting":"晚安~","startTime":0,"endTime":5},{"greeting":"早上好~, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好~, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安, 睡一觉吧~","startTime":12,"endTime":14},{"greeting":"充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧。","startTime":19,"endTime":19},{"greeting":"晚上好, 在属于自己的时间好好放松~","startTime":20,"endTime":24}]},
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: {"mode":"both","api":"https://img2color-go.vercel.app/api?img=","cover_change":true},
+  authorStatus: {"skills":["吃饭","睡觉","看番","后端"]},
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: 惜寞","link":"链接: ","source":"来源: 惜寞","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '惜寞',
+  title: 'Viper',
+  postAI: '',
+  pageFillDescription: 'Viper, 安装, 什么是 Viper, Viper 实操, 建立默认值, 读取配置文件, 写入配置文件, 监控并重新读取配置文件, 读取键, 设置键, 思考问题精弘网络暑期后端开发基础课程站后端课课程源代码以及授课文档在是适用于应用程序的完整配置解决方案它被设计用于在应用程序中工作并且可以处理所有类型的配置需求和格式安装什么是是一个功能强大的配置管理库特别适用于应用程序它可以帮助开发者轻松加载解析更新和保存配置信息从而使应用程序配置管理更加方便和灵活以下是库的一些主要功能和用途加载配置文件可以从不同的配置文件格式如等中读取配置信息并将其映射到数据结构中默认值可以设置默认值以确保配置文件或其他来源中没有指定的配置项具有合理的默认值监控配置变化还支持监控配置文件的更改并在配置文件发生变化时重新加载配置从而允许应用程序在运行时动态更新配置支持多种数据类型可以处理各种基本数据类型如字符串整数浮点数等以及复杂数据类型如数组切片结构体等的配置项环境变量允许使用环境变量覆盖配置文件中的值这对于在不同环境中使用不同配置非常有用命令行标志支持从命令行参数中读取配置值这使得在启动应用程序时通过命令行传递配置选项变得非常简便通过使用开发者可以在应用程序中更轻松地管理和维护配置信息从而实现更高度的灵活性和可配置性特别是在不同环境如开发测试生产中使用不同的配置这对于构建现代化的可伸缩的应用程序是非常有益的会按照下面的优先级显示调用设置值命令行参数环境变量配置文件存储默认值重要目前配置的键是大小写不敏感的目前正在讨论是否将这一选项设为可选实操建立默认值一个好的配置系统将支持默认值如果在配置文件中没有设置这个参数的值那么默认使用作为内容目录如果在配置文件中没有设置这个参数的值那么默认使用一个包含键值对的映射其中键是字符串类型可以是或而值是对应的目录名可以是或通过设置这些默认值代码确保在读取配置文件时如果某些参数没有在配置文件中明确指定那么就会使用这里设置的默认值这样可以确保代码在处理缺失配置的情况下能够正常运行而不会因为找不到配置参数而出现错误读取配置文件需要最少知道在哪里查找配置文件的配置支持和格式的配置文件可以搜索多个路径但目前单个实例只支持单个配置文件不默认任何配置搜索路径将默认决策留给应用程序下面是一个如何使用搜索和读取配置文件的示例不需要任何特定的路径但是至少应该提供一个配置文件预期出现的路径指定配置文件路径配置文件名称无扩展名如果配置文件的名称中没有扩展名则需要配置此项查找配置文件所在的路径多次调用以添加多个搜索路径还可以在工作目录中查找配置查找并读取配置文件处理读取配置文件的错误在加载配置文件出错时你可以像下面这样处理找不到配置文件的特定情况配置文件未找到错误如果需要可以忽略配置文件被找到但产生了另外的错误配置文件找到并成功解析注意自起你也可以有不带扩展名的文件并以编程方式指定其格式对于位于用户目录中的配置文件没有任何扩展名如写入配置文件从配置文件中读取配置文件是有用的但是有时你想要存储在运行时所做的所有修改为此可以使用下面一组命令每个命令都有自己的用途将当前的配置写入预定义的路径并覆盖如果存在的话如果没有预定义的路径则报错将当前的配置写入预定义的路径如果没有预定义的路径则报错如果存在将不会覆盖当前的配置文件将当前的配置写入给定的文件路径将覆盖给定的文件如果它存在的话将当前的配置写入给定的文件路径不会覆盖给定的文件如果它存在的话根据经验标记为的所有方法都不会覆盖任何文件而是直接创建如果不存在而默认行为是创建或截断将当前配置写入和设置的预定义路径因为该配置文件写入过所以会报错监控并重新读取配置文件支持在运行时实时读取配置文件的功能需要重新启动服务器以使配置生效的日子已经一去不复返了驱动的应用程序可以在运行时读取配置文件的更新而不会错过任何消息只需告诉实例可选地你可以为提供一个回调函数以便在每次发生更改时运行确保在调用之前添加了所有的配置路径配置文件发生变更之后会调用的回调函数对于这段代码中的回调函数参数是类型的变量是库中用于表示文件系统事件的结构体类型当配置文件被修改时会创建一个对象并将其作为参数传递给回调函数结构体中包含了与文件系统事件相关的信息包括文件名称事件类型事件时间等在这段代码中我们可以通过来访问文件名获取发生变化的配置文件的名称读取键提供了多种形式的读取方法在刚刚的例子中我们看到了方法的用法但最基础的读取键的方式是方法其返回一个的值使用有所不便系列方法可以返回指定类型的值其中可以为但是请注意如果指定的键不存在或类型不正确方法返回对应类型的零值如果要判断某个键是否存在使用方法另外和直接以返回某个键下面所有的键值对前者返回后者返回以返回所有设置设置键覆盖设置这些可能来自命令行标志也可能来自你自己的应用程序逻辑注册和使用别名别名允许多个键引用单个值注册别名此处和建立了别名结果与下一行相同结果与前一行相同思考问题当你使用如下方式读取配置时会从目录下查找任何以为文件名的配置文件如果同时存在和两个配置文件的话会从哪个配置文件加载配置呢在上面两个语句下搭配使用指定配置文件类型可以实现预期的效果吗',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-21 02:47:07',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="惜寞" type="application/atom+xml">
+</head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><a id="site-name" href="/" accesskey="h"><div class="title">惜寞</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ClickHouse/" style="font-size: 1.05rem;">ClickHouse<sup>1</sup></a><a href="/tags/Cpp/" style="font-size: 1.05rem;">Cpp<sup>1</sup></a><a href="/tags/Gin/" style="font-size: 1.05rem;">Gin<sup>1</sup></a><a href="/tags/Go/" style="font-size: 1.05rem;">Go<sup>9</sup></a><a href="/tags/Go-Web-%E5%90%8E%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 1.05rem;">Go Web 后端部署<sup>1</sup></a><a href="/tags/Gorm/" style="font-size: 1.05rem;">Gorm<sup>1</sup></a><a href="/tags/MySQL/" style="font-size: 1.05rem;">MySQL<sup>2</sup></a><a href="/tags/RPC/" style="font-size: 1.05rem;">RPC<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 1.05rem;">Redis<sup>2</sup></a><a href="/tags/Ubuntu/" style="font-size: 1.05rem;">Ubuntu<sup>3</sup></a><a href="/tags/Viper/" style="font-size: 1.05rem;">Viper<sup>1</sup></a><a href="/tags/Vue-%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 1.05rem;">Vue 前端部署<sup>1</sup></a><a href="/tags/project/" style="font-size: 1.05rem;">project<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.05rem;">分布式<sup>2</sup></a><a href="/tags/%E5%AD%98%E5%82%A8/" style="font-size: 1.05rem;">存储<sup>1</sup></a><a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">微服务<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.05rem;">数据库<sup>4</sup></a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.05rem;">架构<sup>3</sup></a><a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" style="font-size: 1.05rem;">消息队列<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 1.05rem;">系统设计<sup>1</sup></a><a href="/tags/%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E/" style="font-size: 1.05rem;">规则引擎<sup>1</sup></a><a href="/tags/%E9%BB%91%E7%81%B0%E4%BA%A7/" style="font-size: 1.05rem;">黑灰产<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/08/"><span class="card-archive-list-date">八月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">7</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/02/"><span class="card-archive-list-date">二月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">12</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/01/"><span class="card-archive-list-date">一月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">7</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/Go-Web/" itemprop="url">Go Web</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/Go/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Go</span></a><a class="article-meta__tags" href="/tags/Viper/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Viper</span></a></span></div></div><h1 class="post-title" itemprop="name headline">Viper</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="post-meta-icon anzhiyufont anzhiyu-icon-calendar-days"></i><span class="post-meta-label">发表于</span><time itemprop="dateCreated datePublished" datetime="2023-08-16T01:30:00.000Z" title="发表于 2023-08-16 09:30:00">2023-08-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="Viper"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为杭州"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>杭州</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://download.tooc.xlj0.com/uploads/160/blog/img/1694112437750.jpg?_r_=77cbc0fa-73ad-a19c-72c7-0ce9c6beeb15"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://lonesome.cn/Go%20Web/Viper/"><header><a class="post-meta-categories" href="/categories/Go-Web/" itemprop="url">Go Web</a><a href="/tags/Go/" tabindex="-1" itemprop="url">Go</a><a href="/tags/Viper/" tabindex="-1" itemprop="url">Viper</a><h1 id="CrawlerTitle" itemprop="name headline">Viper</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">惜寞</span><time itemprop="dateCreated datePublished" datetime="2023-08-16T01:30:00.000Z" title="undefined 2023-08-16 09:30:00">2023-08-16</time></header><p>精弘网络暑期后端 Go Web 开发基础课程<br>B 站 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nN41187ez/?share_source=copy_web&vd_source=220eb9848825e3e6c13414db26a32f45">后端课·Viper</a><br>课程源代码以及 markdown 授课文档在 <a target="_blank" rel="noopener" href="https://github.com/zjutjh/Summer-Lessons-2023/tree/Go-Web-Basic">Github</a></p>
+<h1 id="Viper"><a href="#Viper" class="headerlink" title="Viper"></a>Viper</h1><p>Viper 是适用于 Go 应用程序的完整配置解决方案。它被设计用于在应用程序中工作，并且可以处理<strong>所有类型的配置需求和格式</strong>。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ go get github.com/spf13/viper</span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是-Viper"><a href="#什么是-Viper" class="headerlink" title="什么是 Viper"></a>什么是 Viper</h2><p>Viper 是一个功能强大的配置管理库，特别适用于 Go 应用程序。它可以帮助 Go 开发者轻松加载、解析、更新和保存配置信息，从而使应用程序配置管理更加方便和灵活。</p>
+<p>以下是 Go Viper 库的一些主要功能和用途：</p>
+<ul>
+<li>加载配置文件：Viper 可以从不同的配置文件格式（如 JSON、YAML、TOML、HCL 等）中读取配置信息，并将其映射到 Go 数据结构中。</li>
+<li>默认值：可以设置默认值，以确保配置文件或其他来源中没有指定的配置项具有合理的默认值。</li>
+<li>监控配置变化：Viper 还支持监控配置文件的更改，并在配置文件发生变化时重新加载配置，从而允许应用程序在运行时动态更新配置。</li>
+<li>支持多种数据类型：Viper 可以处理各种基本数据类型（如字符串、整数、浮点数等）以及复杂数据类型（如数组、切片、结构体等）的配置项。</li>
+<li>环境变量：Viper 允许使用环境变量覆盖配置文件中的值，这对于在不同环境中使用不同配置非常有用。</li>
+<li>命令行标志：Viper 支持从命令行参数中读取配置值，这使得在启动应用程序时通过命令行传递配置选项变得非常简便。</li>
+</ul>
+<p>通过使用 Viper，开发者可以在 Go 应用程序中更轻松地管理和维护配置信息，从而实现更高度的灵活性和可配置性，特别是在不同环境（如开发、测试、生产）中使用不同的配置。这对于构建现代化的、可伸缩的应用程序是非常有益的。</p>
+<p>Viper 会按照下面的优先级：</p>
+<ul>
+<li>显示调用 Set 设置值</li>
+<li>命令行参数（flag）</li>
+<li>环境变量</li>
+<li>配置文件</li>
+<li>key&#x2F;value 存储</li>
+<li>默认值</li>
+</ul>
+<p>重要： 目前 Viper 配置的键（Key）是大小写不敏感的。目前正在讨论是否将这一选项设为可选。</p>
+<h1 id="Viper-实操"><a href="#Viper-实操" class="headerlink" title="Viper 实操"></a>Viper 实操</h1><h2 id="建立默认值"><a href="#建立默认值" class="headerlink" title="建立默认值"></a>建立默认值</h2><p>一个好的配置系统将支持默认值。</p>
+<p>Examples:</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetDefault(<span class="string">&quot;ContentDir&quot;</span>, <span class="string">&quot;content&quot;</span>)</span><br><span class="line"></span><br><span class="line">viper.SetDefault(<span class="string">&quot;Taxonomies&quot;</span>, <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;<span class="string">&quot;tag&quot;</span>: <span class="string">&quot;tags&quot;</span>, <span class="string">&quot;category&quot;</span>: <span class="string">&quot;categories&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如果在配置文件中没有设置 ContentDir 这个参数的值，那么默认使用”content”作为内容目录。</p>
+<p>如果在配置文件中没有设置 Taxonomies 这个参数的值，那么默认使用一个包含键值对的映射。其中，键是字符串类型，可以是”tag”或”category”，而值是对应的目录名，可以是”tags”或”categories”。</p>
+<p>通过设置这些默认值，代码确保在读取配置文件时，如果某些参数没有在配置文件中明确指定，那么就会使用这里设置的默认值。这样可以确保代码在处理缺失配置的情况下能够正常运行，而不会因为找不到配置参数而出现错误。</p>
+<h2 id="读取配置文件"><a href="#读取配置文件" class="headerlink" title="读取配置文件"></a>读取配置文件</h2><p>Viper 需要最少知道在哪里查找配置文件的配置。Viper 支持<code>JSON</code>、<code>TOML</code>、<code>YAML</code>、<code>HCL</code>、<code>envfile</code>和<code>Java properties</code>格式的配置文件。Viper 可以搜索多个路径，但目前单个 Viper 实例只支持单个配置文件。Viper 不默认任何配置搜索路径，将默认决策留给应用程序。</p>
+<p>下面是一个如何使用 Viper 搜索和读取配置文件的示例。不需要任何特定的路径，但是至少应该提供一个配置文件预期出现的路径。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetConfigFile(<span class="string">&quot;./config.yaml&quot;</span>) <span class="comment">// 指定配置文件路径</span></span><br><span class="line">viper.SetConfigName(<span class="string">&quot;config&quot;</span>) <span class="comment">// 配置文件名称(无扩展名)</span></span><br><span class="line">viper.SetConfigType(<span class="string">&quot;yaml&quot;</span>) <span class="comment">// 如果配置文件的名称中没有扩展名，则需要配置此项</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;/etc/appname/&quot;</span>)   <span class="comment">// 查找配置文件所在的路径</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;$HOME/.appname&quot;</span>)  <span class="comment">// 多次调用以添加多个搜索路径</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;.&quot;</span>)               <span class="comment">// 还可以在工作目录中查找配置</span></span><br><span class="line">err := viper.ReadInConfig() <span class="comment">// 查找并读取配置文件</span></span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123; <span class="comment">// 处理读取配置文件的错误</span></span><br><span class="line">    <span class="built_in">panic</span>(fmt.Errorf(<span class="string">&quot;Fatal error config file: %s \n&quot;</span>, err))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在加载配置文件出错时，你可以像下面这样处理找不到配置文件的特定情况：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> err := viper.ReadInConfig(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := err.(viper.ConfigFileNotFoundError); ok &#123;</span><br><span class="line">        <span class="comment">// 配置文件未找到错误；如果需要可以忽略</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 配置文件被找到，但产生了另外的错误</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 配置文件找到并成功解析</span></span><br></pre></td></tr></table></figure>
+
+<p>注意:自 1.6 起,你也可以有不带扩展名的文件，并以编程方式指定其格式。对于位于用户$HOME 目录中的配置文件没有任何扩展名，如.zshrc。</p>
+<h2 id="写入配置文件"><a href="#写入配置文件" class="headerlink" title="写入配置文件"></a>写入配置文件</h2><p>从配置文件中读取配置文件是有用的，但是有时你想要存储在运行时所做的所有修改。为此，可以使用下面一组命令，每个命令都有自己的用途:</p>
+<ul>
+<li>WriteConfig - 将当前的 viper 配置写入预定义的路径并覆盖（如果存在的话）。如果没有预定义的路径，则报错。</li>
+<li>SafeWriteConfig - 将当前的 viper 配置写入预定义的路径。如果没有预定义的路径，则报错。如果存在，将不会覆盖当前的配置文件。</li>
+<li>WriteConfigAs - 将当前的 viper 配置写入给定的文件路径。将覆盖给定的文件(如果它存在的话)。</li>
+<li>SafeWriteConfigAs - 将当前的 viper 配置写入给定的文件路径。不会覆盖给定的文件(如果它存在的话)。</li>
+</ul>
+<p>根据经验，标记为 safe 的所有方法都不会覆盖任何文件，而是直接创建（如果不存在），而默认行为是创建或截断。</p>
+<p>Examples:</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.WriteConfig() <span class="comment">// 将当前配置写入“viper.AddConfigPath()”和“viper.SetConfigName”设置的预定义路径</span></span><br><span class="line">viper.SafeWriteConfig()</span><br><span class="line">viper.WriteConfigAs(<span class="string">&quot;/path/to/my/.config&quot;</span>)</span><br><span class="line">viper.SafeWriteConfigAs(<span class="string">&quot;/path/to/my/.config&quot;</span>) <span class="comment">// 因为该配置文件写入过，所以会报错</span></span><br><span class="line">viper.SafeWriteConfigAs(<span class="string">&quot;/path/to/my/.other_config&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="监控并重新读取配置文件"><a href="#监控并重新读取配置文件" class="headerlink" title="监控并重新读取配置文件"></a>监控并重新读取配置文件</h2><p>Viper 支持在运行时实时读取配置文件的功能。</p>
+<p>需要重新启动服务器以使配置生效的日子已经一去不复返了，viper 驱动的应用程序可以在运行时读取配置文件的更新，而不会错过任何消息。</p>
+<p>只需告诉 viper 实例 watchConfig。可选地，你可以为 Viper 提供一个回调函数，以便在每次发生更改时运行。</p>
+<p>确保在调用 WatchConfig()之前添加了所有的配置路径。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.WatchConfig()</span><br><span class="line">viper.OnConfigChange(<span class="function"><span class="keyword">func</span><span class="params">(e fsnotify.Event)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 配置文件发生变更之后会调用的回调函数</span></span><br><span class="line">    fmt.Println(<span class="string">&quot;Config file changed:&quot;</span>, e.Name)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>对于这段代码中的回调函数，参数 e 是 fsnotify.Event 类型的变量。fsnotify.Event 是 Viper 库中用于表示文件系统事件的结构体类型。当配置文件被修改时，Viper 会创建一个 fsnotify.Event 对象，并将其作为参数传递给回调函数。</p>
+<p>fsnotify.Event 结构体中包含了与文件系统事件相关的信息，包括文件名称、事件类型、事件时间等。在这段代码中，我们可以通过 e.Name 来访问文件名，获取发生变化的配置文件的名称。</p>
+<h2 id="读取键"><a href="#读取键" class="headerlink" title="读取键"></a>读取键</h2><p>viper 提供了多种形式的读取方法。在刚刚的例子中，我们看到了 GetString 方法的用法。</p>
+<p>但 viper 最基础的读取键的方式是 Get 方法，其返回一个 interface{}的值，使用有所不便。GetType 系列方法可以返回指定类型的值。其中，Type 可以为 Bool&#x2F;Float64&#x2F;Int&#x2F;String&#x2F;Time&#x2F;Duration&#x2F;IntSlice&#x2F;StringSlice。但是请注意，如果指定的键不存在或类型不正确，GetType 方法返回对应类型的零值。</p>
+<p>如果要判断某个键是否存在，使用<code>IsSet</code>方法。另外，<code>GetStringMap</code>和<code>GetStringMapString</code>直接以 map 返回某个键下面所有的键值对，前者返回<code>map[string]interface&#123;&#125;</code>，后者返回<code>map[string]string</code>。<code>AllSettings</code>以<code>map[string]interface&#123;&#125;</code>返回所有设置。</p>
+<h2 id="设置键"><a href="#设置键" class="headerlink" title="设置键"></a>设置键</h2><p>覆盖设置：这些可能来自命令行标志，也可能来自你自己的应用程序逻辑。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.Set(<span class="string">&quot;Verbose&quot;</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>注册和使用别名：别名允许多个键引用单个值</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.RegisterAlias(<span class="string">&quot;loud&quot;</span>, <span class="string">&quot;Verbose&quot;</span>)  <span class="comment">// 注册别名（此处loud和Verbose建立了别名）</span></span><br><span class="line"></span><br><span class="line">viper.Set(<span class="string">&quot;verbose&quot;</span>, <span class="literal">true</span>) <span class="comment">// 结果与下一行相同</span></span><br><span class="line">viper.Set(<span class="string">&quot;loud&quot;</span>, <span class="literal">true</span>)   <span class="comment">// 结果与前一行相同</span></span><br><span class="line"></span><br><span class="line">viper.GetBool(<span class="string">&quot;loud&quot;</span>) <span class="comment">// true</span></span><br><span class="line">viper.GetBool(<span class="string">&quot;verbose&quot;</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="思考问题"><a href="#思考问题" class="headerlink" title="思考问题"></a>思考问题</h2><p>当你使用如下方式读取配置时，viper 会从<code>./conf</code>目录下查找任何以<code>config</code>为文件名的配置文件，如果同时存在<code>./conf/config.json</code>和<code>./conf/config.yaml</code>两个配置文件的话，viper 会从哪个配置文件加载配置呢？</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetConfigName(<span class="string">&quot;config&quot;</span>)</span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;./conf&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在上面两个语句下搭配使用<code>viper.SetConfigType(&quot;yaml&quot;)</code>指定配置文件类型可以实现预期的效果吗？</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/about" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">惜寞</div><div class="post-copyright__author_desc">无人小间</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://lonesome.cn/Go%20Web/Viper/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://lonesome.cn/Go%20Web/Viper/')">Viper</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://lonesome.cn/Go%20Web/Viper/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="rm.copyPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://lonesome.cn" target="_blank">惜寞</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/Go/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Go<span class="tagsPageCount">9</span></a><a class="post-meta__box__tags" href="/tags/Viper/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Viper<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://download.tooc.xlj0.com/uploads/160/blog/img/1697876433981.jpg?_r_=9b6752ce-3538-1a7b-cdbc-f107f80a03b5" data-sites="wechat,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/Go%20Web/Gorm/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/100526175345.jpg?_r_=984db2d4-845f-dc30-90b0-fceeeb46ac72" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Gorm</div></div></a></div><div class="next-post pull-right"><a href="/Go%20Web/%E9%80%9A%E8%AE%AF%E5%BD%95%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1696251132810.png?_r_=02f51193-6d6b-0ba2-9ef5-63b9aee27310" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">通讯录管理系统</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/Byte/Go%E6%A1%86%E6%9E%B6%E4%B8%89%E4%BB%B6%E5%A5%97%E8%AF%A6%E8%A7%A3%EF%BC%88Web-RPC-ORM%EF%BC%89/" title="Go框架三件套详解（Web&#x2F;RPC&#x2F;ORM）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/101423393760.jpg?_r_=eecdfdc9-3b89-de35-1a6b-38519b5a3a45" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-01-20</div><div class="title">Go框架三件套详解（Web&#x2F;RPC&#x2F;ORM）</div></div></a></div><div><a href="/Byte/Go%E8%AF%AD%E8%A8%80%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E8%AF%A6%E8%A7%A3/" title="Go语言内存管理详解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1695653703832.jpg?_r_=7e035cdc-25a0-d61c-709a-a2b9f69cdd9c" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-01-19</div><div class="title">Go语言内存管理详解</div></div></a></div><div><a href="/Byte/Go%E9%AB%98%E8%B4%A8%E9%87%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="Go高质量编程与性能优化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1696067779119.jpg?_r_=9ed5f51e-5d59-b13f-5e1e-d55e872ada1d" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-01-17</div><div class="title">Go高质量编程与性能优化</div></div></a></div><div><a href="/Byte/Go%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6-%E5%B7%A5%E7%A8%8B%E8%BF%9B%E9%98%B6/" title="Go语言进阶-工程进阶"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1692279520196.png?_r_=7598d18b-ab46-90a8-65a0-bf9159e4a104" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-01-16</div><div class="title">Go语言进阶-工程进阶</div></div></a></div><div><a href="/Byte/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="Go语言基础-基础语法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1696591612202.jpg?_r_=5f3a7e3b-693f-0b81-335d-826e6bb7f8fd" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-01-15</div><div class="title">Go语言基础-基础语法</div></div></a></div><div><a href="/Go%20Web/Gorm/" title="Gorm"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/100526175345.jpg?_r_=984db2d4-845f-dc30-90b0-fceeeb46ac72" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-08-15</div><div class="title">Gorm</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Viper"><span class="toc-number">1.</span> <span class="toc-text">Viper</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Viper"><span class="toc-number">1.2.</span> <span class="toc-text">什么是 Viper</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Viper-%E5%AE%9E%E6%93%8D"><span class="toc-number">2.</span> <span class="toc-text">Viper 实操</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-number">2.1.</span> <span class="toc-text">建立默认值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">读取配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">写入配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E6%8E%A7%E5%B9%B6%E9%87%8D%E6%96%B0%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.4.</span> <span class="toc-text">监控并重新读取配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E9%94%AE"><span class="toc-number">2.5.</span> <span class="toc-text">读取键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E9%94%AE"><span class="toc-number">2.6.</span> <span class="toc-text">设置键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83%E9%97%AE%E9%A2%98"><span class="toc-number">2.7.</span> <span class="toc-text">思考问题</span></a></li></ol></li></ol></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="/2831802697@qq.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/XiMo-210" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibili2233/[2233娘_吐魂].png" alt="上班..." title="上班..."/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 By <a class="footer-bar-link" href="/" title="惜寞" target="_blank">惜寞</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="浙ICP备2022030617号-3">浙ICP备2022030617号-3</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">4</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://lonesome.cn/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ClickHouse/" style="font-size: 0.88rem;">ClickHouse<sup>1</sup></a><a href="/tags/Cpp/" style="font-size: 0.88rem;">Cpp<sup>1</sup></a><a href="/tags/Gin/" style="font-size: 0.88rem;">Gin<sup>1</sup></a><a href="/tags/Go/" style="font-size: 0.88rem;">Go<sup>9</sup></a><a href="/tags/Go-Web-%E5%90%8E%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 0.88rem;">Go Web 后端部署<sup>1</sup></a><a href="/tags/Gorm/" style="font-size: 0.88rem;">Gorm<sup>1</sup></a><a href="/tags/MySQL/" style="font-size: 0.88rem;">MySQL<sup>2</sup></a><a href="/tags/RPC/" style="font-size: 0.88rem;">RPC<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 0.88rem;">Redis<sup>2</sup></a><a href="/tags/Ubuntu/" style="font-size: 0.88rem;">Ubuntu<sup>3</sup></a><a href="/tags/Viper/" style="font-size: 0.88rem;">Viper<sup>1</sup></a><a href="/tags/Vue-%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 0.88rem;">Vue 前端部署<sup>1</sup></a><a href="/tags/project/" style="font-size: 0.88rem;">project<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 0.88rem;">分布式<sup>2</sup></a><a href="/tags/%E5%AD%98%E5%82%A8/" style="font-size: 0.88rem;">存储<sup>1</sup></a><a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">微服务<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 0.88rem;">数据库<sup>4</sup></a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 0.88rem;">架构<sup>3</sup></a><a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" style="font-size: 0.88rem;">消息队列<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 0.88rem;">系统设计<sup>1</sup></a><a href="/tags/%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E/" style="font-size: 0.88rem;">规则引擎<sup>1</sup></a><a href="/tags/%E9%BB%91%E7%81%B0%E4%BA%A7/" style="font-size: 0.88rem;">黑灰产<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="is-center" id="loading-database"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-pulse-icon"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.4/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("10/21/2023 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2023 By 安知鱼 V1.6.8",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 惜寞 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("10/21/2023 00:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      img.src = "https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibili2233/[2233娘_大笑].png";
+      img.title = "下班！！！";
+      img.alt = "下班！！！";
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "visitor@anheyu.com";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

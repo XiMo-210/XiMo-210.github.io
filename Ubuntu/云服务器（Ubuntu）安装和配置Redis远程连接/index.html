@@ -1,0 +1,524 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>云服务器（Ubuntu）安装和配置 Redis 远程连接 | 惜寞</title><meta name="keywords" content="Redis,Ubuntu"><meta name="author" content="惜寞"><meta name="copyright" content="惜寞"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="云服务器（Ubuntu）安装和配置 Redis 远程连接"><meta name="application-name" content="云服务器（Ubuntu）安装和配置 Redis 远程连接"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="云服务器（Ubuntu）安装和配置 Redis 远程连接"><meta property="og:url" content="https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/index.html"><meta property="og:site_name" content="惜寞"><meta property="og:description" content="记录下 Redis 在云服务器（Ubuntu）上的安装和相关配置"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://download.tooc.xlj0.com/uploads/160/blog/img/1693891747570.jpg?_r_=392c2ee1-d55e-d4b6-a398-3bfcd7e43c9b"><meta property="article:author" content="惜寞"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://download.tooc.xlj0.com/uploads/160/blog/img/1693891747570.jpg?_r_=392c2ee1-d55e-d4b6-a398-3bfcd7e43c9b"><meta name="description" content="记录下 Redis 在云服务器（Ubuntu）上的安装和相关配置"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f7df12d76bd74a3406a8c37585ebb53a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: {"enable":true,"img":"https://upload-bbs.miyoushe.com/upload/2023/09/03/125766904/ee23df8517f3c3e3efc4145658269c06_5714860933110284659.png"},
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: {"enable":true,"ck":"3GI2R5ow93lZOl7w","LingQueMonitorID":"3GI2R5ow93lZOl7w"},
+  greetingBox: {"enable":true,"default":"晚上好~","list":[{"greeting":"晚安~","startTime":0,"endTime":5},{"greeting":"早上好~, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好~, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安, 睡一觉吧~","startTime":12,"endTime":14},{"greeting":"充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧。","startTime":19,"endTime":19},{"greeting":"晚上好, 在属于自己的时间好好放松~","startTime":20,"endTime":24}]},
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: {"mode":"both","api":"https://img2color-go.vercel.app/api?img=","cover_change":true},
+  authorStatus: {"skills":["吃饭","睡觉","看番","后端"]},
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: 惜寞","link":"链接: ","source":"来源: 惜寞","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '惜寞',
+  title: '云服务器（Ubuntu）安装和配置 Redis 远程连接',
+  postAI: '',
+  pageFillDescription: '一、安装 Redis, 1.更新软件包列表, 2.查看是否安装 Redis, 3.安装 Redis, 4.查看 Redis 状态, 5.启动、重启、停止 Redis 服务的命令, 6.测试 Redis, 二、配置 Redis 远程连接, 1.查找 Redis 配置文件, 2.编辑配置文件, 说明, 取消本地绑定x2F绑定某个 ip 地址, 设置密码, 关闭保护模式, 总结, 3.重启 Redis 服务, 4.云服务器放行 6379 端口, 5.测试连接记录下在云服务器上的安装和相关配置云服务器腾讯云系统版本终端腾讯云腾讯云自己的本文全部终端指令均执行在用户下切换至用户由于腾讯云上拿到的主机分配给的用户是用户并不是用户这边附上腾讯云官方给出添加用户登录的方法轻量应用服务器常见问题文档中心腾讯云一安装更新软件包列表查看是否安装如果输入上述命令后没有任何的输出如上图则说明没有安装安装这里列出了软件包的相关信息并询问你是否继续安装输入后回车确定继续安装等待安装完后再输入第步的命令查看是否已经安装输出如上图说明已经安装成功安装的版本默认为当前源中最新的稳定版本可以输入下面的命令查看版本注写本文时的版本为查看状态一旦安装完成服务将会自动启动想要查看服务运行状态可以输入下面命令查看输出显示服务已经被启动并且正在运行启动重启停止服务的命令上一步的命令可以用来查看服务的运行状态下面是启动重启停止命令启动停止重启停止和启动命令的演示测试输入下面命令连接到服务器使用乒乓来测试连通性输入返回说明成功退出二配置远程连接配置主要是对配置文件进行修改默认位置在查找配置文件使用之前的命令查看服务的状态可以找到这样一个文件然后使用下面的命令查看该文件就可以找到我们文件所在的位置编辑配置文件使用编辑文件说明默认开启保护模式并且绑定了本地也就是只有云服务器本地才能连接并操作保护模式如果符合下面两个条件不是之一则无法被远程连接没有明确使用绑定某个地址没有设置密码想要实现远程连接主要有三种方案取消本地绑定可以被任何访问设置密码明确绑定某个地址设置密码可选取消本地绑定可以被任何访问关闭保护模式取消本地绑定绑定某个地址移动光标定位到输入进入编辑模式在英文输入法下的意思是只接受本机的访问请求如果想取消本地绑定可以被任何访问将该行注释掉在前面加即表示接受任何地址的访问如果想明确绑定某个地址将替换为指定的地址即可设置密码移动光标定位到取消该行注释删除并将修改为你想要设置的密码如就是我设置的密码配置修改生效后再进入命令行时需要输入密码登录即使用命令登录是你自己设置的密码示例如果不输入密码进入则会报错未授权关闭保护模式移动光标定位到将修改为即表示关闭保护模式总结一般在上线部署时只在云服务器本地运行不需要修改配置文件线下调试时希望开发环境也可以连接到方案一取消本地绑定可以被任何访问保护模式默认开启即可设置密码以上仅作为参考具体可以自行选择重启服务按退出编辑模式然后输入后回车保存文件并退出在英文输入法下输入下面命令重启服务以应用修改后的配置文件输入以下命令查看服务所监听的和端口以方案一设置为例可以看到绑定的已经变成了即接受任何地址的访问云服务器放行端口在云服务器厂商找到对应云服务器的防火墙并放行端口的默认端口这里以腾讯云为例不同厂商基本都大同小异有这样一条记录就说明端口已经放行了测试连接本文使用测试连接云服务器上的地址填你云服务器的地址连接成功',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-21 02:59:28',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="惜寞" type="application/atom+xml">
+</head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><a id="site-name" href="/" accesskey="h"><div class="title">惜寞</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ClickHouse/" style="font-size: 1.05rem;">ClickHouse<sup>1</sup></a><a href="/tags/Cpp/" style="font-size: 1.05rem;">Cpp<sup>1</sup></a><a href="/tags/Gin/" style="font-size: 1.05rem;">Gin<sup>1</sup></a><a href="/tags/Go/" style="font-size: 1.05rem;">Go<sup>9</sup></a><a href="/tags/Go-Web-%E5%90%8E%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 1.05rem;">Go Web 后端部署<sup>1</sup></a><a href="/tags/Gorm/" style="font-size: 1.05rem;">Gorm<sup>1</sup></a><a href="/tags/MySQL/" style="font-size: 1.05rem;">MySQL<sup>2</sup></a><a href="/tags/RPC/" style="font-size: 1.05rem;">RPC<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 1.05rem;">Redis<sup>2</sup></a><a href="/tags/Ubuntu/" style="font-size: 1.05rem;">Ubuntu<sup>3</sup></a><a href="/tags/Viper/" style="font-size: 1.05rem;">Viper<sup>1</sup></a><a href="/tags/Vue-%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 1.05rem;">Vue 前端部署<sup>1</sup></a><a href="/tags/project/" style="font-size: 1.05rem;">project<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.05rem;">分布式<sup>2</sup></a><a href="/tags/%E5%AD%98%E5%82%A8/" style="font-size: 1.05rem;">存储<sup>1</sup></a><a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">微服务<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.05rem;">数据库<sup>4</sup></a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.05rem;">架构<sup>3</sup></a><a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" style="font-size: 1.05rem;">消息队列<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 1.05rem;">系统设计<sup>1</sup></a><a href="/tags/%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E/" style="font-size: 1.05rem;">规则引擎<sup>1</sup></a><a href="/tags/%E9%BB%91%E7%81%B0%E4%BA%A7/" style="font-size: 1.05rem;">黑灰产<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/08/"><span class="card-archive-list-date">八月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">7</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/02/"><span class="card-archive-list-date">二月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">12</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/01/"><span class="card-archive-list-date">一月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">7</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/Ubuntu/" itemprop="url">Ubuntu</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/Redis/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Redis</span></a><a class="article-meta__tags" href="/tags/Ubuntu/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Ubuntu</span></a></span></div></div><h1 class="post-title" itemprop="name headline">云服务器（Ubuntu）安装和配置 Redis 远程连接</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="post-meta-icon anzhiyufont anzhiyu-icon-calendar-days"></i><span class="post-meta-label">发表于</span><time itemprop="dateCreated datePublished" datetime="2023-08-28T10:03:00.000Z" title="发表于 2023-08-28 18:03:00">2023-08-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="云服务器（Ubuntu）安装和配置 Redis 远程连接"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为杭州"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>杭州</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="https://download.tooc.xlj0.com/uploads/160/blog/img/1693891747570.jpg?_r_=392c2ee1-d55e-d4b6-a398-3bfcd7e43c9b"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/"><header><a class="post-meta-categories" href="/categories/Ubuntu/" itemprop="url">Ubuntu</a><a href="/tags/Redis/" tabindex="-1" itemprop="url">Redis</a><a href="/tags/Ubuntu/" tabindex="-1" itemprop="url">Ubuntu</a><h1 id="CrawlerTitle" itemprop="name headline">云服务器（Ubuntu）安装和配置 Redis 远程连接</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">惜寞</span><time itemprop="dateCreated datePublished" datetime="2023-08-28T10:03:00.000Z" title="undefined 2023-08-28 18:03:00">2023-08-28</time></header><p>记录下 Redis 在云服务器（Ubuntu）上的安装和相关配置<br>云服务器：腾讯云<br>系统：Ubuntu 22.04 LTS<br>Redis 版本：6.0.16<br>终端：腾讯云 OrcaTerm（腾讯云自己的 WebShell）</p>
+<span id="more"></span>
+
+<ul>
+<li>本文全部 shell 终端指令均执行在  <strong>root</strong>  用户下<ul>
+<li>切换至 root 用户：<code>su root</code></li>
+<li>由于腾讯云上拿到的 Ubuntu 主机分配给的用户是 ubuntu 用户，并不是 root 用户，这边附上腾讯云官方给出添加 root 用户登录的方法 <a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/1207/44569#ubuntu-.E7.B3.BB.E7.BB.9F.E5.A6.82.E4.BD.95.E4.BD.BF.E7.94.A8-root-.E7.94.A8.E6.88.B7.E7.99.BB.E5.BD.95.E5.AE.9E.E4.BE.8B.EF.BC.9F">轻量应用服务器 常见问题-文档中心-腾讯云</a></li>
+</ul>
+</li>
+</ul>
+<!-- toc -->
+
+<h1 id="一、安装-Redis"><a href="#一、安装-Redis" class="headerlink" title="一、安装 Redis"></a>一、安装 Redis</h1><h2 id="1-更新软件包列表"><a href="#1-更新软件包列表" class="headerlink" title="1.更新软件包列表"></a>1.更新软件包列表</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/%7D$R%5D2DXU1%29SN_%28AG%5D5B90W7.png"></p>
+<h2 id="2-查看是否安装-Redis"><a href="#2-查看是否安装-Redis" class="headerlink" title="2.查看是否安装 Redis"></a>2.查看是否安装 Redis</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">dpkg -l | grep redis</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/C$1LTE%7DH8RVR%7DZZG9H%60G8%7D6.png"><br>如果输入上述命令后没有任何的输出（如上图），则说明没有安装 Redis</p>
+<h2 id="3-安装-Redis"><a href="#3-安装-Redis" class="headerlink" title="3.安装 Redis"></a>3.安装 Redis</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt install redis-server</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230827165945.png"><br>这里列出了软件包的相关信息并询问你是否继续安装<br>输入<code>y</code>后回车确定继续安装<br>等待安装完后再输入第 2 步的命令查看 Redis 是否已经安装<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/LuSOlUCZ.png"><br>输出如上图，说明 Redis 已经安装成功  <br>安装的 Redis 版本默认为当前 apt 源中最新的稳定版本，可以输入下面的命令查看 Redis 版本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">redis-server -v</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/%5B@R%5D%60D4U%7DC%7BIIVA%7D_5@1EHX.png"><br>注：写本文时的版本为 6.0.16</p>
+<h2 id="4-查看-Redis-状态"><a href="#4-查看-Redis-状态" class="headerlink" title="4.查看 Redis 状态"></a>4.查看 Redis 状态</h2><p>一旦安装完成，Redis 服务将会自动启动，想要查看 Redis 服务运行状态可以输入下面命令查看</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo systemctl status redis</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230827172654.png"><br>输出显示 Redis 服务已经被启动，并且正在运行</p>
+<h2 id="5-启动、重启、停止-Redis-服务的命令"><a href="#5-启动、重启、停止-Redis-服务的命令" class="headerlink" title="5.启动、重启、停止 Redis 服务的命令"></a>5.启动、重启、停止 Redis 服务的命令</h2><p>上一步的命令可以用来查看 Redis 服务的运行状态，下面是启动、重启、停止命令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 启动</span></span><br><span class="line">sudo systemctl start redis</span><br><span class="line"><span class="comment"># 停止</span></span><br><span class="line">sudo systemctl stop redis</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">sudo systemctl restart redis</span><br></pre></td></tr></table></figure>
+
+<p>停止和启动命令的演示<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/AzWn6nmz.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/ExoxlCnJ.png"></p>
+<h2 id="6-测试-Redis"><a href="#6-测试-Redis" class="headerlink" title="6.测试 Redis"></a>6.测试 Redis</h2><p>输入下面命令连接到 Redis 服务器</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">redis-cli</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/OZ166RP970H7XNCEK.png"><br>使用<code>乒乓</code>来测试连通性，输入<code>ping</code><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/NA4P5OMQ6T7TQ7ZUO.png"><br>返回<code>pong</code>说明成功！<br>退出</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、配置-Redis-远程连接"><a href="#二、配置-Redis-远程连接" class="headerlink" title="二、配置 Redis 远程连接"></a>二、配置 Redis 远程连接</h1><p>配置 Redis 主要是对配置文件 redis.conf 进行修改，默认位置在 &#x2F;etc&#x2F;redis&#x2F;redis.conf</p>
+<h2 id="1-查找-Redis-配置文件"><a href="#1-查找-Redis-配置文件" class="headerlink" title="1.查找 Redis 配置文件"></a>1.查找 Redis 配置文件</h2><p>使用之前的<code>sudo systemctl status redis</code>命令查看 Redis 服务的状态<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230827210532.png"><br>可以找到这样一个文件<br>然后使用下面的命令查看该文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /lib/systemd/system/redis-server.service</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230827224128.png"><br>就可以找到我们 redis.conf 文件所在的位置</p>
+<h2 id="2-编辑配置文件"><a href="#2-编辑配置文件" class="headerlink" title="2.编辑配置文件"></a>2.编辑配置文件</h2><p>使用 vim 编辑 redis.conf 文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim /etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/FVFBYWHUN8A0GGTN52.png"></p>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>Redis 默认开启保护模式，并且绑定了本地，也就是只有云服务器本地才能连接并操作 Redis</p>
+<ul>
+<li>保护模式：如果符合下面两个条件（不是之一）则无法被远程连接<ol>
+<li>没有明确使用 bind 绑定某个 ip 地址</li>
+<li>没有设置密码</li>
+</ol>
+</li>
+<li>想要实现远程连接主要有三种方案<ol>
+<li>取消本地绑定（可以被任何 ip 访问），设置密码</li>
+<li>明确绑定某个 ip 地址，设置密码（可选）</li>
+<li>取消本地绑定（可以被任何 ip 访问），关闭保护模式</li>
+</ol>
+</li>
+</ul>
+<h3 id="取消本地绑定-绑定某个-ip-地址"><a href="#取消本地绑定-绑定某个-ip-地址" class="headerlink" title="取消本地绑定&#x2F;绑定某个 ip 地址"></a>取消本地绑定&#x2F;绑定某个 ip 地址</h3><p>移动光标定位到<code>bind 127.0.0.1 ::1</code><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020231014230542.png"><br>输入<code>i</code>进入编辑模式（在英文输入法下）<br><code>bind 127.0.0.1 ::1</code>的意思是只接受本机的访问请求</p>
+<ul>
+<li>如果想取消本地绑定（可以被任何 ip 访问）<ul>
+<li>将该行注释掉（在前面加<code>#</code>，即<code># bind 127.0.0.1 ::1</code>），表示接受任何 ip 地址的访问</li>
+</ul>
+</li>
+<li>如果想明确绑定某个 ip 地址<ul>
+<li>将<code>127.0.0.1</code>替换为指定的 ip 地址即可</li>
+</ul>
+</li>
+</ul>
+<h3 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h3><p>移动光标定位到<code># requirepass foobared</code><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230828000035.png"><br>取消该行注释（删除<code>#</code>），并将<code>foobared</code>修改为你想要设置的密码<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230828000310.png"><br>如 123456 就是我设置的密码<br>配置修改生效后再进入 Redis 命令行时需要输入密码登录<br>即使用<code>redis-cli -a your_password</code>命令登录，<code>your_password</code>是你自己设置的密码<br>示例：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230828113506.png"><br>如果不输入密码进入则会报错未授权<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/B6YLQTNK3SY033I8RQ.png"></p>
+<h3 id="关闭保护模式"><a href="#关闭保护模式" class="headerlink" title="关闭保护模式"></a>关闭保护模式</h3><p>移动光标定位到<code>protected-mode yes</code><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020231014210256.png"><br>将<code>yes</code>修改为<code>no</code>即表示关闭保护模式</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>一般在上线部署时（只在云服务器本地运行），不需要修改配置文件</li>
+<li>线下调试时，希望开发环境也可以连接到 Redis（方案一）<ul>
+<li><code># bind 127.0.0.1 ::1</code>，取消本地绑定（可以被任何 ip 访问）</li>
+<li><code>protected-mode yes</code>，保护模式默认开启即可</li>
+<li><code>requirepass your_password</code>，设置密码</li>
+</ul>
+</li>
+</ul>
+<p>以上仅作为参考，具体可以自行选择</p>
+<h2 id="3-重启-Redis-服务"><a href="#3-重启-Redis-服务" class="headerlink" title="3.重启 Redis 服务"></a>3.重启 Redis 服务</h2><p>按<code>Esc</code>退出编辑模式，然后输入<code>:wq</code>后回车保存文件并退出（在英文输入法下）<br>输入下面命令重启 Redis 服务以应用修改后的配置文件</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart redis</span><br></pre></td></tr></table></figure>
+
+<p>输入以下命令查看 Redis 服务所监听的 ip 和端口（以方案一设置为例）</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">netstat -tlpn | grep redis</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/ECFUWVWTNV92UG54.png"><br>可以看到 Redis 绑定的 ip 已经变成了 0.0.0.0，即接受任何 ip 地址的访问</p>
+<h2 id="4-云服务器放行-6379-端口"><a href="#4-云服务器放行-6379-端口" class="headerlink" title="4.云服务器放行 6379 端口"></a>4.云服务器放行 6379 端口</h2><p>在云服务器厂商找到对应云服务器的防火墙，并放行 6379 端口（Redis 的默认端口）<br>这里以腾讯云为例，不同厂商基本都大同小异<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/I5OJRTPQ8PURYVHS.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/TXMS8UF3QGJLKNKM4VBD.png"><br>有这样一条记录就说明 6379 端口已经放行了</p>
+<h2 id="5-测试连接"><a href="#5-测试连接" class="headerlink" title="5.测试连接"></a>5.测试连接</h2><p>本文使用 Another Redis Desktop Manager 测试连接云服务器上的 Redis<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/20230828005651.png"><br>地址填你云服务器的 ip 地址<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/Ubuntu/Pasted%20image%2020230828005841.png"><br>连接成功！</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/about" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">惜寞</div><div class="post-copyright__author_desc">无人小间</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/')">云服务器（Ubuntu）安装和配置 Redis 远程连接</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://lonesome.cn/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AERedis%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="rm.copyPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://lonesome.cn" target="_blank">惜寞</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/Redis/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Redis<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/Ubuntu/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Ubuntu<span class="tagsPageCount">3</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="https://download.tooc.xlj0.com/uploads/160/blog/img/1697876433981.jpg?_r_=9b6752ce-3538-1a7b-cdbc-f107f80a03b5" data-sites="wechat,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEMySQL%EF%BC%88%E5%90%AB%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%EF%BC%89/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1695314965506.jpg?_r_=6f1b5b4b-6f0b-5d84-c246-027561b55265" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">云服务器（Ubuntu）安装和配置 MySQL（含远程连接）</div></div></a></div><div class="next-post pull-right"><a href="/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E9%83%A8%E7%BD%B2%20Go%20Web%20%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%EF%BC%88Gin%20+%20Vue%EF%BC%89/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1697876433981.jpg?_r_=9b6752ce-3538-1a7b-cdbc-f107f80a03b5" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">云服务器（Ubuntu）部署 Go Web 前后端分离项目（Gin + Vue）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/Byte/Redis-%E5%A4%A7%E5%8E%82%E7%A8%8B%E5%BA%8F%E5%91%98%E6%98%AF%E6%80%8E%E4%B9%88%E7%94%A8%E7%9A%84/" title="Redis-大厂程序员是怎么用的"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1674569495862.jpeg?_r_=561f29a0-f8e0-7e14-e0c5-9b8d2d12565e" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-02-15</div><div class="title">Redis-大厂程序员是怎么用的</div></div></a></div><div><a href="/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEMySQL%EF%BC%88%E5%90%AB%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%EF%BC%89/" title="云服务器（Ubuntu）安装和配置 MySQL（含远程连接）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1695314965506.jpg?_r_=6f1b5b4b-6f0b-5d84-c246-027561b55265" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-08-26</div><div class="title">云服务器（Ubuntu）安装和配置 MySQL（含远程连接）</div></div></a></div><div><a href="/Ubuntu/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88Ubuntu%EF%BC%89%E9%83%A8%E7%BD%B2%20Go%20Web%20%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%EF%BC%88Gin%20+%20Vue%EF%BC%89/" title="云服务器（Ubuntu）部署 Go Web 前后端分离项目（Gin + Vue）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/1697876433981.jpg?_r_=9b6752ce-3538-1a7b-cdbc-f107f80a03b5" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2023-08-31</div><div class="title">云服务器（Ubuntu）部署 Go Web 前后端分离项目（Gin + Vue）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85-Redis"><span class="toc-number">1.</span> <span class="toc-text">一、安装 Redis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9B%B4%E6%96%B0%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%88%97%E8%A1%A8"><span class="toc-number">1.1.</span> <span class="toc-text">1.更新软件包列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85-Redis"><span class="toc-number">1.2.</span> <span class="toc-text">2.查看是否安装 Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-Redis"><span class="toc-number">1.3.</span> <span class="toc-text">3.安装 Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%9F%A5%E7%9C%8B-Redis-%E7%8A%B6%E6%80%81"><span class="toc-number">1.4.</span> <span class="toc-text">4.查看 Redis 状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8%E3%80%81%E9%87%8D%E5%90%AF%E3%80%81%E5%81%9C%E6%AD%A2-Redis-%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">5.启动、重启、停止 Redis 服务的命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%B5%8B%E8%AF%95-Redis"><span class="toc-number">1.6.</span> <span class="toc-text">6.测试 Redis</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%85%8D%E7%BD%AE-Redis-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.</span> <span class="toc-text">二、配置 Redis 远程连接</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9F%A5%E6%89%BE-Redis-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">1.查找 Redis 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">2.编辑配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">2.2.1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E6%9C%AC%E5%9C%B0%E7%BB%91%E5%AE%9A-%E7%BB%91%E5%AE%9A%E6%9F%90%E4%B8%AA-ip-%E5%9C%B0%E5%9D%80"><span class="toc-number">2.2.2.</span> <span class="toc-text">取消本地绑定&#x2F;绑定某个 ip 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81"><span class="toc-number">2.2.3.</span> <span class="toc-text">设置密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.4.</span> <span class="toc-text">关闭保护模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.2.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%87%8D%E5%90%AF-Redis-%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.3.</span> <span class="toc-text">3.重启 Redis 服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%94%BE%E8%A1%8C-6379-%E7%AB%AF%E5%8F%A3"><span class="toc-number">2.4.</span> <span class="toc-text">4.云服务器放行 6379 端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%B5%8B%E8%AF%95%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.5.</span> <span class="toc-text">5.测试连接</span></a></li></ol></li></ol></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="/2831802697@qq.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://download.tooc.xlj0.com/uploads/160/blog/img/avatar.jpg" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/XiMo-210" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibili2233/[2233娘_吐魂].png" alt="上班..." title="上班..."/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2023 By <a class="footer-bar-link" href="/" title="惜寞" target="_blank">惜寞</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="浙ICP备2022030617号-3">浙ICP备2022030617号-3</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">4</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://lonesome.cn/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ClickHouse/" style="font-size: 0.88rem;">ClickHouse<sup>1</sup></a><a href="/tags/Cpp/" style="font-size: 0.88rem;">Cpp<sup>1</sup></a><a href="/tags/Gin/" style="font-size: 0.88rem;">Gin<sup>1</sup></a><a href="/tags/Go/" style="font-size: 0.88rem;">Go<sup>9</sup></a><a href="/tags/Go-Web-%E5%90%8E%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 0.88rem;">Go Web 后端部署<sup>1</sup></a><a href="/tags/Gorm/" style="font-size: 0.88rem;">Gorm<sup>1</sup></a><a href="/tags/MySQL/" style="font-size: 0.88rem;">MySQL<sup>2</sup></a><a href="/tags/RPC/" style="font-size: 0.88rem;">RPC<sup>1</sup></a><a href="/tags/Redis/" style="font-size: 0.88rem;">Redis<sup>2</sup></a><a href="/tags/Ubuntu/" style="font-size: 0.88rem;">Ubuntu<sup>3</sup></a><a href="/tags/Viper/" style="font-size: 0.88rem;">Viper<sup>1</sup></a><a href="/tags/Vue-%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" style="font-size: 0.88rem;">Vue 前端部署<sup>1</sup></a><a href="/tags/project/" style="font-size: 0.88rem;">project<sup>1</sup></a><a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 0.88rem;">分布式<sup>2</sup></a><a href="/tags/%E5%AD%98%E5%82%A8/" style="font-size: 0.88rem;">存储<sup>1</sup></a><a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">微服务<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 0.88rem;">数据库<sup>4</sup></a><a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 0.88rem;">架构<sup>3</sup></a><a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" style="font-size: 0.88rem;">消息队列<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" style="font-size: 0.88rem;">系统设计<sup>1</sup></a><a href="/tags/%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E/" style="font-size: 0.88rem;">规则引擎<sup>1</sup></a><a href="/tags/%E9%BB%91%E7%81%B0%E4%BA%A7/" style="font-size: 0.88rem;">黑灰产<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="is-center" id="loading-database"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-pulse-icon"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div id="he-plugin-simple"></div><script>var WIDGET = {
+  "CONFIG": {
+    "modules": "0124",
+    "background": "2",
+    "tmpColor": "FFFFFF",
+    "tmpSize": "16",
+    "cityColor": "FFFFFF",
+    "citySize": "16",
+    "aqiColor": "E8D87B",
+    "aqiSize": "16",
+    "weatherIconSize": "24",
+    "alertIconSize": "18",
+    "padding": "10px 10px 10px 10px",
+    "shadow": "0",
+    "language": "auto",
+    "borderRadius": "20",
+    "fixed": "true",
+    "vertical": "top",
+    "horizontal": "left",
+    "left": "20",
+    "top": "7.1",
+    "key": "df245676fb434a0691ead1c63341cd94"
+  }
+}
+</script><link rel="stylesheet" href="https://widget.qweather.net/simple/static/css/he-simple.css?v=1.4.0"/><script src="https://widget.qweather.net/simple/static/js/he-simple.js?v=1.4.0"></script><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.20/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.4/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("10/21/2023 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2023 By 安知鱼 V1.6.8",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 惜寞 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("10/21/2023 00:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      img.src = "https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/bilibili2233/[2233娘_大笑].png";
+      img.title = "下班！！！";
+      img.alt = "下班！！！";
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "visitor@anheyu.com";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
