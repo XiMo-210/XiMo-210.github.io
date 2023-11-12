@@ -58,9 +58,9 @@
     <category term="Ubuntu" scheme="https://lonesome.cn/categories/Ubuntu/"/>
     
     
-    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
-    
     <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
+    
+    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
     
   </entry>
   
@@ -81,9 +81,9 @@
     <category term="Ubuntu" scheme="https://lonesome.cn/categories/Ubuntu/"/>
     
     
-    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
-    
     <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
+    
+    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
     
   </entry>
   
@@ -115,7 +115,7 @@
     <link href="https://lonesome.cn/Go%20Web/Viper/"/>
     <id>https://lonesome.cn/Go%20Web/Viper/</id>
     <published>2023-08-16T01:30:00.000Z</published>
-    <updated>2023-10-20T18:47:07.617Z</updated>
+    <updated>2023-11-10T16:52:59.158Z</updated>
     
     <content type="html"><![CDATA[<p>精弘网络暑期后端 Go Web 开发基础课程<br>B 站 <a href="https://www.bilibili.com/video/BV1nN41187ez/?share_source=copy_web&vd_source=220eb9848825e3e6c13414db26a32f45">后端课·Viper</a><br>课程源代码以及 markdown 授课文档在 <a href="https://github.com/zjutjh/Summer-Lessons-2023/tree/Go-Web-Basic">Github</a></p><h1 id="Viper"><a href="#Viper" class="headerlink" title="Viper"></a>Viper</h1><p>Viper 是适用于 Go 应用程序的完整配置解决方案。它被设计用于在应用程序中工作，并且可以处理<strong>所有类型的配置需求和格式</strong>。</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ go get github.com/spf13/viper</span><br></pre></td></tr></table></figure><h2 id="什么是-Viper"><a href="#什么是-Viper" class="headerlink" title="什么是 Viper"></a>什么是 Viper</h2><p>Viper 是一个功能强大的配置管理库，特别适用于 Go 应用程序。它可以帮助 Go 开发者轻松加载、解析、更新和保存配置信息，从而使应用程序配置管理更加方便和灵活。</p><p>以下是 Go Viper 库的一些主要功能和用途：</p><ul><li>加载配置文件：Viper 可以从不同的配置文件格式（如 JSON、YAML、TOML、HCL 等）中读取配置信息，并将其映射到 Go 数据结构中。</li><li>默认值：可以设置默认值，以确保配置文件或其他来源中没有指定的配置项具有合理的默认值。</li><li>监控配置变化：Viper 还支持监控配置文件的更改，并在配置文件发生变化时重新加载配置，从而允许应用程序在运行时动态更新配置。</li><li>支持多种数据类型：Viper 可以处理各种基本数据类型（如字符串、整数、浮点数等）以及复杂数据类型（如数组、切片、结构体等）的配置项。</li><li>环境变量：Viper 允许使用环境变量覆盖配置文件中的值，这对于在不同环境中使用不同配置非常有用。</li><li>命令行标志：Viper 支持从命令行参数中读取配置值，这使得在启动应用程序时通过命令行传递配置选项变得非常简便。</li></ul><p>通过使用 Viper，开发者可以在 Go 应用程序中更轻松地管理和维护配置信息，从而实现更高度的灵活性和可配置性，特别是在不同环境（如开发、测试、生产）中使用不同的配置。这对于构建现代化的、可伸缩的应用程序是非常有益的。</p><p>Viper 会按照下面的优先级：</p><ul><li>显示调用 Set 设置值</li><li>命令行参数（flag）</li><li>环境变量</li><li>配置文件</li><li>key&#x2F;value 存储</li><li>默认值</li></ul><p>重要： 目前 Viper 配置的键（Key）是大小写不敏感的。目前正在讨论是否将这一选项设为可选。</p><h1 id="Viper-实操"><a href="#Viper-实操" class="headerlink" title="Viper 实操"></a>Viper 实操</h1><h2 id="建立默认值"><a href="#建立默认值" class="headerlink" title="建立默认值"></a>建立默认值</h2><p>一个好的配置系统将支持默认值。</p><p>Examples:</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetDefault(<span class="string">&quot;ContentDir&quot;</span>, <span class="string">&quot;content&quot;</span>)</span><br><span class="line"></span><br><span class="line">viper.SetDefault(<span class="string">&quot;Taxonomies&quot;</span>, <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;<span class="string">&quot;tag&quot;</span>: <span class="string">&quot;tags&quot;</span>, <span class="string">&quot;category&quot;</span>: <span class="string">&quot;categories&quot;</span>&#125;)</span><br></pre></td></tr></table></figure><p>如果在配置文件中没有设置 ContentDir 这个参数的值，那么默认使用”content”作为内容目录。</p><p>如果在配置文件中没有设置 Taxonomies 这个参数的值，那么默认使用一个包含键值对的映射。其中，键是字符串类型，可以是”tag”或”category”，而值是对应的目录名，可以是”tags”或”categories”。</p><p>通过设置这些默认值，代码确保在读取配置文件时，如果某些参数没有在配置文件中明确指定，那么就会使用这里设置的默认值。这样可以确保代码在处理缺失配置的情况下能够正常运行，而不会因为找不到配置参数而出现错误。</p><h2 id="读取配置文件"><a href="#读取配置文件" class="headerlink" title="读取配置文件"></a>读取配置文件</h2><p>Viper 需要最少知道在哪里查找配置文件的配置。Viper 支持<code>JSON</code>、<code>TOML</code>、<code>YAML</code>、<code>HCL</code>、<code>envfile</code>和<code>Java properties</code>格式的配置文件。Viper 可以搜索多个路径，但目前单个 Viper 实例只支持单个配置文件。Viper 不默认任何配置搜索路径，将默认决策留给应用程序。</p><p>下面是一个如何使用 Viper 搜索和读取配置文件的示例。不需要任何特定的路径，但是至少应该提供一个配置文件预期出现的路径。</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetConfigFile(<span class="string">&quot;./config.yaml&quot;</span>) <span class="comment">// 指定配置文件路径</span></span><br><span class="line">viper.SetConfigName(<span class="string">&quot;config&quot;</span>) <span class="comment">// 配置文件名称(无扩展名)</span></span><br><span class="line">viper.SetConfigType(<span class="string">&quot;yaml&quot;</span>) <span class="comment">// 如果配置文件的名称中没有扩展名，则需要配置此项</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;/etc/appname/&quot;</span>)   <span class="comment">// 查找配置文件所在的路径</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;$HOME/.appname&quot;</span>)  <span class="comment">// 多次调用以添加多个搜索路径</span></span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;.&quot;</span>)               <span class="comment">// 还可以在工作目录中查找配置</span></span><br><span class="line">err := viper.ReadInConfig() <span class="comment">// 查找并读取配置文件</span></span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123; <span class="comment">// 处理读取配置文件的错误</span></span><br><span class="line">    <span class="built_in">panic</span>(fmt.Errorf(<span class="string">&quot;Fatal error config file: %s \n&quot;</span>, err))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在加载配置文件出错时，你可以像下面这样处理找不到配置文件的特定情况：</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> err := viper.ReadInConfig(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := err.(viper.ConfigFileNotFoundError); ok &#123;</span><br><span class="line">        <span class="comment">// 配置文件未找到错误；如果需要可以忽略</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 配置文件被找到，但产生了另外的错误</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 配置文件找到并成功解析</span></span><br></pre></td></tr></table></figure><p>注意:自 1.6 起,你也可以有不带扩展名的文件，并以编程方式指定其格式。对于位于用户$HOME 目录中的配置文件没有任何扩展名，如.zshrc。</p><h2 id="写入配置文件"><a href="#写入配置文件" class="headerlink" title="写入配置文件"></a>写入配置文件</h2><p>从配置文件中读取配置文件是有用的，但是有时你想要存储在运行时所做的所有修改。为此，可以使用下面一组命令，每个命令都有自己的用途:</p><ul><li>WriteConfig - 将当前的 viper 配置写入预定义的路径并覆盖（如果存在的话）。如果没有预定义的路径，则报错。</li><li>SafeWriteConfig - 将当前的 viper 配置写入预定义的路径。如果没有预定义的路径，则报错。如果存在，将不会覆盖当前的配置文件。</li><li>WriteConfigAs - 将当前的 viper 配置写入给定的文件路径。将覆盖给定的文件(如果它存在的话)。</li><li>SafeWriteConfigAs - 将当前的 viper 配置写入给定的文件路径。不会覆盖给定的文件(如果它存在的话)。</li></ul><p>根据经验，标记为 safe 的所有方法都不会覆盖任何文件，而是直接创建（如果不存在），而默认行为是创建或截断。</p><p>Examples:</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.WriteConfig() <span class="comment">// 将当前配置写入“viper.AddConfigPath()”和“viper.SetConfigName”设置的预定义路径</span></span><br><span class="line">viper.SafeWriteConfig()</span><br><span class="line">viper.WriteConfigAs(<span class="string">&quot;/path/to/my/.config&quot;</span>)</span><br><span class="line">viper.SafeWriteConfigAs(<span class="string">&quot;/path/to/my/.config&quot;</span>) <span class="comment">// 因为该配置文件写入过，所以会报错</span></span><br><span class="line">viper.SafeWriteConfigAs(<span class="string">&quot;/path/to/my/.other_config&quot;</span>)</span><br></pre></td></tr></table></figure><h2 id="监控并重新读取配置文件"><a href="#监控并重新读取配置文件" class="headerlink" title="监控并重新读取配置文件"></a>监控并重新读取配置文件</h2><p>Viper 支持在运行时实时读取配置文件的功能。</p><p>需要重新启动服务器以使配置生效的日子已经一去不复返了，viper 驱动的应用程序可以在运行时读取配置文件的更新，而不会错过任何消息。</p><p>只需告诉 viper 实例 watchConfig。可选地，你可以为 Viper 提供一个回调函数，以便在每次发生更改时运行。</p><p>确保在调用 WatchConfig()之前添加了所有的配置路径。</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.WatchConfig()</span><br><span class="line">viper.OnConfigChange(<span class="function"><span class="keyword">func</span><span class="params">(e fsnotify.Event)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 配置文件发生变更之后会调用的回调函数</span></span><br><span class="line">    fmt.Println(<span class="string">&quot;Config file changed:&quot;</span>, e.Name)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><p>对于这段代码中的回调函数，参数 e 是 fsnotify.Event 类型的变量。fsnotify.Event 是 Viper 库中用于表示文件系统事件的结构体类型。当配置文件被修改时，Viper 会创建一个 fsnotify.Event 对象，并将其作为参数传递给回调函数。</p><p>fsnotify.Event 结构体中包含了与文件系统事件相关的信息，包括文件名称、事件类型、事件时间等。在这段代码中，我们可以通过 e.Name 来访问文件名，获取发生变化的配置文件的名称。</p><h2 id="读取键"><a href="#读取键" class="headerlink" title="读取键"></a>读取键</h2><p>viper 提供了多种形式的读取方法。在刚刚的例子中，我们看到了 GetString 方法的用法。</p><p>但 viper 最基础的读取键的方式是 Get 方法，其返回一个 interface{}的值，使用有所不便。GetType 系列方法可以返回指定类型的值。其中，Type 可以为 Bool&#x2F;Float64&#x2F;Int&#x2F;String&#x2F;Time&#x2F;Duration&#x2F;IntSlice&#x2F;StringSlice。但是请注意，如果指定的键不存在或类型不正确，GetType 方法返回对应类型的零值。</p><p>如果要判断某个键是否存在，使用<code>IsSet</code>方法。另外，<code>GetStringMap</code>和<code>GetStringMapString</code>直接以 map 返回某个键下面所有的键值对，前者返回<code>map[string]interface&#123;&#125;</code>，后者返回<code>map[string]string</code>。<code>AllSettings</code>以<code>map[string]interface&#123;&#125;</code>返回所有设置。</p><h2 id="设置键"><a href="#设置键" class="headerlink" title="设置键"></a>设置键</h2><p>覆盖设置：这些可能来自命令行标志，也可能来自你自己的应用程序逻辑。</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.Set(<span class="string">&quot;Verbose&quot;</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure><p>注册和使用别名：别名允许多个键引用单个值</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.RegisterAlias(<span class="string">&quot;loud&quot;</span>, <span class="string">&quot;Verbose&quot;</span>)  <span class="comment">// 注册别名（此处loud和Verbose建立了别名）</span></span><br><span class="line"></span><br><span class="line">viper.Set(<span class="string">&quot;verbose&quot;</span>, <span class="literal">true</span>) <span class="comment">// 结果与下一行相同</span></span><br><span class="line">viper.Set(<span class="string">&quot;loud&quot;</span>, <span class="literal">true</span>)   <span class="comment">// 结果与前一行相同</span></span><br><span class="line"></span><br><span class="line">viper.GetBool(<span class="string">&quot;loud&quot;</span>) <span class="comment">// true</span></span><br><span class="line">viper.GetBool(<span class="string">&quot;verbose&quot;</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure><h2 id="思考问题"><a href="#思考问题" class="headerlink" title="思考问题"></a>思考问题</h2><p>当你使用如下方式读取配置时，viper 会从<code>./conf</code>目录下查找任何以<code>config</code>为文件名的配置文件，如果同时存在<code>./conf/config.json</code>和<code>./conf/config.yaml</code>两个配置文件的话，viper 会从哪个配置文件加载配置呢？</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetConfigName(<span class="string">&quot;config&quot;</span>)</span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;./conf&quot;</span>)</span><br></pre></td></tr></table></figure><p>在上面两个语句下搭配使用<code>viper.SetConfigType(&quot;yaml&quot;)</code>指定配置文件类型可以实现预期的效果吗？</p>]]></content>
     
@@ -219,9 +219,9 @@
     <category term="Byte" scheme="https://lonesome.cn/categories/Byte/"/>
     
     
-    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
     <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
+    
+    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -242,9 +242,9 @@
     <category term="Byte" scheme="https://lonesome.cn/categories/Byte/"/>
     
     
-    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
     <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
+    
+    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -416,9 +416,9 @@
     <category term="Byte" scheme="https://lonesome.cn/categories/Byte/"/>
     
     
-    <category term="架构" scheme="https://lonesome.cn/tags/%E6%9E%B6%E6%9E%84/"/>
-    
     <category term="分布式" scheme="https://lonesome.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+    <category term="架构" scheme="https://lonesome.cn/tags/%E6%9E%B6%E6%9E%84/"/>
     
   </entry>
   
