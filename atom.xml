@@ -58,9 +58,9 @@
     <category term="Ubuntu" scheme="https://lonesome.cn/categories/Ubuntu/"/>
     
     
-    <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
-    
     <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
+    
+    <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
     
   </entry>
   
@@ -81,9 +81,9 @@
     <category term="Ubuntu" scheme="https://lonesome.cn/categories/Ubuntu/"/>
     
     
-    <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
-    
     <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
+    
+    <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
     
   </entry>
   
@@ -219,9 +219,9 @@
     <category term="Byte" scheme="https://lonesome.cn/categories/Byte/"/>
     
     
-    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
-    
     <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
     
   </entry>
   
@@ -242,9 +242,9 @@
     <category term="Byte" scheme="https://lonesome.cn/categories/Byte/"/>
     
     
-    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
-    
     <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
     
   </entry>
   
