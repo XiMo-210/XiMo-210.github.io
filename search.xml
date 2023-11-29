@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Docker 安装 MySQL</title>
+      <link href="/Docker/Docker%20%E5%AE%89%E8%A3%85%20MySQL/"/>
+      <url>/Docker/Docker%20%E5%AE%89%E8%A3%85%20MySQL/</url>
+      
+        <content type="html"><![CDATA[<p>记录下 Docker 安装 MySQL</p><ul><li>本文环境<ul><li>云服务器：阿里云（不同厂商云服务器上的操作基本相同）</li><li>系统：Ubuntu 22.04</li><li>终端：<a href="https://orcaterm.cloud.tencent.com/terminal">腾讯云 OrcaTerm</a>（腾讯云的 WebShell（个人感觉使用体验不错，<del>因为 ui 好看</del>），不同厂商的云服务器都可以使用，可以代替 Xshell+Xftp 使用）</li></ul></li></ul><p>Docker Hub 中的 MySQL 官方镜像文档<br><a href="https://hub.docker.com/_/mysql">mysql - Official Image | Docker Hub</a></p><h1 id="1-寻找镜像"><a href="#1-寻找镜像" class="headerlink" title="1.寻找镜像"></a>1.寻找镜像</h1><p>在 Docker 仓库中查找 MySQL 镜像</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker search mysql</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/NQFHOZC2A6I0WCPBT.png"><br>可以看到第一个就是我们需要的镜像</p><h1 id="2-拉取镜像"><a href="#2-拉取镜像" class="headerlink" title="2.拉取镜像"></a>2.拉取镜像</h1><p>在查找到 MySQL 的镜像后，就可以进行拉取</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/G4016RJ0I0C39T6SPHF.png"><br>因为没有指定 MySQL 的版本，所以默认拉取最新的版本（即 latest）<br>如果想要拉取指定的版本，可以在拉取时添加版本号（<code>mysql:tag</code>），以 MySQL 5.7 版本为例</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker pull mysql:5.7</span><br></pre></td></tr></table></figure><h1 id="3-查看镜像"><a href="#3-查看镜像" class="headerlink" title="3.查看镜像"></a>3.查看镜像</h1><p>拉取完毕后，检查镜像是否安装完成</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看所有镜像</span></span><br><span class="line">docker images</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/4Z5AEPZEIYZHSED3Z4.png"><br>可以看到已经有 MySQL 的镜像了（hello-world 是我在安装完 Docker 测试时拉取的镜像）</p><h1 id="4-创建容器并启动"><a href="#4-创建容器并启动" class="headerlink" title="4.创建容器并启动"></a>4.创建容器并启动</h1><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 容器名称、端口、挂载目录、root 密码均可自行指定</span></span><br><span class="line">docker run \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -v /usr/local/docker/mysql/conf:/etc/mysql/conf.d \</span><br><span class="line">  -v /usr/local/docker/mysql/data:/var/lib/mysql \</span><br><span class="line">  -v /usr/local/docker/mysql/log:/var/log/mysql \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=123456 \</span><br><span class="line">  -d \</span><br><span class="line">  mysql</span><br></pre></td></tr></table></figure><p>参数说明：</p><ul><li><code>--name mysql</code>：指定容器的名称为 mysql（可以自己指定）</li><li><code>-p 3306:3306</code>：将容器的 3306（右边的）端口挂载到宿主机的 3306（左边的）端口（前提是不被占用）</li><li><code>-v</code>：将相关目录挂载到宿主机防止数据丢失，如果不挂载的话在删除容器后会丢失存储的数据，即<strong>挂载后即使容器删除，只要宿主机目录中的数据还存在，使用该目录新创建的容器中依旧有原先容器中挂载的数据</strong><ul><li><code>/usr/local/docker/mysql/conf:/etc/mysql/conf.d</code>：将容器中<code>/etc/mysql/conf.d</code>配置目录挂载到宿主机的<code>/usr/local/docker/mysql/conf</code>目录<ul><li><strong>想要修改 MySQL 配置可以直接在宿主机的配置目录下添加一份自定义的<code>my.cnf</code>配置文件，该文件中的配置优先级高于 MySQL 的默认配置（容器中 MySQL 的配置文件路径位于<code>/etc/my.cnf）</code></strong></li><li><strong>也可以提前编辑好<code>my.cnf</code>文件，创建的容器会按你挂载目录中的自定义配置启动</strong></li></ul></li><li><code>/usr/local/docker/mysql/data:/var/lib/mysql</code>：将容器中<code>/var/lib/mysql</code>数据目录挂载到宿主机的<code>/usr/local/docker/mysql/data</code>目录</li><li><code>/usr/local/docker/mysql/log:/var/log/mysql</code>：将容器中<code>/var/log/mysql</code>日志目录挂载到宿主机的<code>/usr/local/docker/mysql/log</code>目录</li><li><strong>注：实际宿主机中用于挂载的目录根据自己需求设置，如果只是开发测试环境可以选择不挂载（<del>用完就删正合我意</del>）</strong></li></ul></li><li><code>-e MYSQL_ROOT_PASSWORD=123456</code>：初始化 MySQL root 用户的密码为 123456</li><li><code>-d</code>：以后台的方式运行</li><li><code>mysql:tag</code>：指定创建容器的镜像（<code>:tag</code>指定版本，不加默认最新版）<ul><li>建议创建容器时使用<code>:tag</code>指定版本，可以使用<code>docker images</code>查看镜像的版本，以免过段时间版本更新后导致现在拉取的镜像已经不是最新版本，又重新拉取一个最新版本的镜像进行容器创建</li></ul></li></ul><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/9TDRMFZ3UMHFY.png"><br>返回的<code>c258c3dfa0d8b94b3f2ec6075d548bcd9757c516492a5706092d340f35df14d2</code>是创建的容器 id</p><h1 id="5-查看容器"><a href="#5-查看容器" class="headerlink" title="5.查看容器"></a>5.查看容器</h1><p>检查容器是否创建成功</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看运行中的容器</span></span><br><span class="line">docker ps</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/MTWL1MUW7KQR1T.png"><br>可以看到创建的 MySQL 容器已经在运行中了<br>我们可以通过 Docker 命令进入 MySQL 容器内部</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 这里的 mysql 是创建容器时自行指定的容器名称</span></span><br><span class="line">docker <span class="built_in">exec</span> -it mysql /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用容器 id（即上图中的 CONTANINER ID）</span></span><br><span class="line">docker <span class="built_in">exec</span> -it c258c3dfa0d8 /bin/bash</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/TEKF58YP3LHZNC.png"><br>进入后就可以和在 linux 中一样使用 MySQL 了<br>查看 MySQL 版本号</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql --version</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/EELM6A6ZY1UK8C4KDZ7.png"><br>注：写本文时的最新版本为 8.2.0<br>输入<code>mysql -u root -p</code>后再输入密码即可进入 MySQL 命令行<br><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/0GHC27658X48D5XLLG.png"><br>后续使用和正常 MySQL 一样，想要退出 MySQL 和容器使用<code>exit</code>命令即可</p><h1 id="6-删除容器"><a href="#6-删除容器" class="headerlink" title="6.删除容器"></a>6.删除容器</h1><p>不能直接删除运行中的容器，因此需要先停止容器再删除</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 这里的 mysql 是创建容器时自行指定的容器名称</span></span><br><span class="line"><span class="comment"># 停止容器</span></span><br><span class="line">docker stop mysql</span><br><span class="line"><span class="comment"># 删除容器</span></span><br><span class="line">docker <span class="built_in">rm</span> mysql</span><br></pre></td></tr></table></figure><p>但是可以加上<code>-f</code>参数来强制删除运行中的容器</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 这里的 mysql 是创建容器时自行指定的容器名称</span></span><br><span class="line">docker <span class="built_in">rm</span> -f mysql</span><br></pre></td></tr></table></figure><h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="时区问题"><a href="#时区问题" class="headerlink" title="时区问题"></a>时区问题</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>进入 MySQL 命令行后使用下面命令查看当前时间</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select now();</span><br></pre></td></tr></table></figure><p><img src="https://download.tooc.xlj0.com/uploads/160/blog/Docker/43XOZIG33DMYUBUXV.png"><br>会发现 MySQL 中时间比系统时间少了8个小时，因为 MySQL 的时区并不是我们所在的东八区（即北京时间）</p><h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><h4 id="一：命令行中修改"><a href="#一：命令行中修改" class="headerlink" title="一：命令行中修改"></a>一：命令行中修改</h4><p>MySQL 中的系统时区，分为全局时区和当前会话的时区，如果当前会话不指定时区，默认使用全局时区，可以使用下面的命令将全局时区修改为东八区（即北京时间）</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set global time_zone = &#x27;+8.00&#x27;;</span><br><span class="line"></span><br><span class="line"># 修改当前会话的时区（相当于临时修改）</span><br><span class="line"># set time_zone = &#x27;+8.00&#x27;; </span><br></pre></td></tr></table></figure><p>如果想要立即生效需要执行</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure><p>再次<code>select now();</code>查看时间会发现已经是东八区的时间了</p><h4 id="二：修改-my-cnf-配置文件"><a href="#二：修改-my-cnf-配置文件" class="headerlink" title="二：修改 my.cnf 配置文件"></a>二：修改 my.cnf 配置文件</h4><h5 id="容器中修改"><a href="#容器中修改" class="headerlink" title="容器中修改"></a>容器中修改</h5><p>可以编辑容器中 MySQL 的<code>my.cnf</code>（位于<code>/etc/my.cnf</code>）配置文件<br>然后在 [mysqld] 区域加上<code>default-time_zone = &#39;+8:00&#39;</code></p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">......</span><br><span class="line">default-time_zone = &#x27;+8:00&#x27;</span><br><span class="line">......</span><br><span class="line">[client]</span><br><span class="line">......</span><br></pre></td></tr></table></figure><p>然后重启 MySQL<br>注：MySQL 容器中没有 vim，如果想要编辑需要先安装 vim（<del>所以我没有演示</del>）</p><h5 id="通过挂载的配置文件修改"><a href="#通过挂载的配置文件修改" class="headerlink" title="通过挂载的配置文件修改"></a>通过挂载的配置文件修改</h5><p>如果在创建容器时<em>将容器中的配置目录挂载到了宿主机</em>，那就可以直接编辑宿主机中的配置文件进行修改了<br>首先在配置目录挂载的宿主机目录下新建一个<code>my.cnf</code>文件，然后使用 vim 编辑</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入你自己挂载的宿主机配置目录</span></span><br><span class="line"><span class="built_in">cd</span> /usr/local/docker/mysql/conf</span><br><span class="line"><span class="comment"># 新建一个 my.cnf 文件</span></span><br><span class="line"><span class="built_in">touch</span> my.cnf</span><br><span class="line"><span class="comment"># 使用 vim 编辑</span></span><br><span class="line">vim my.cnf</span><br></pre></td></tr></table></figure><p>添加下面配置内容（<del>不会还有人不会 vim 吧</del>）</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">default-time-zone = &#x27;+08:00&#x27;</span><br></pre></td></tr></table></figure><p>保存退出后重启容器即可</p><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 这里的 mysql 是创建容器时自行指定的容器名称</span></span><br><span class="line"><span class="comment"># 重启重启</span></span><br><span class="line">docker restart mysql </span><br></pre></td></tr></table></figure><p>之后再次进入容器中的 MySQL，通过<code>select now();</code>查看时间会发现已经是东八区的时间了</p><p><strong>注：想要修改其他配置也可以按照相同的方法在宿主机编辑配置文件，并且只要创建容器时挂载宿主机的配置目录不变，即使删除当前容器重开一个，修改的配置也依旧在</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Docker </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Docker </tag>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Ubuntu 安装 Docker</title>
       <link href="/Ubuntu/Ubuntu%20%E5%AE%89%E8%A3%85%20Docker/"/>
       <url>/Ubuntu/Ubuntu%20%E5%AE%89%E8%A3%85%20Docker/</url>
@@ -20,9 +47,9 @@
       
         <tags>
             
-            <tag> Ubuntu </tag>
-            
             <tag> Docker </tag>
+            
+            <tag> Ubuntu </tag>
             
         </tags>
       
@@ -350,9 +377,9 @@
       
         <tags>
             
-            <tag> 数据库 </tag>
-            
             <tag> MySQL </tag>
+            
+            <tag> 数据库 </tag>
             
         </tags>
       
