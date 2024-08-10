@@ -1,0 +1,926 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>分布式定时任务 - 惜寞的无人小间</title>
+
+  
+    <meta name="description" content="前言春节集卡瓜分 20 亿作为后端开发同学，怎样设计最终开奖环节技术方案？  业务流程 定时扫描抖音用户集卡状态 汇总计算用户的瓜分金额 定时开奖    技术体量 亿级用户规模 十亿级资金规模 百万级读写 QPS   方案引出 自动化 + 定时执行 + 海量数据 + 高效稳定 &#x3D; 分布式定时任务    发展历程发展历史Windows 批处理 Case 1：10 分钟后 Windows">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式定时任务">
+<meta property="og:url" content="https://lonesome.cn/blog/bytedance-5th-youthcamp-backend/distributed-scheduled-tasks/index.html">
+<meta property="og:site_name" content="惜寞的无人小间">
+<meta property="og:description" content="前言春节集卡瓜分 20 亿作为后端开发同学，怎样设计最终开奖环节技术方案？  业务流程 定时扫描抖音用户集卡状态 汇总计算用户的瓜分金额 定时开奖    技术体量 亿级用户规模 十亿级资金规模 百万级读写 QPS   方案引出 自动化 + 定时执行 + 海量数据 + 高效稳定 &#x3D; 分布式定时任务    发展历程发展历史Windows 批处理 Case 1：10 分钟后 Windows">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/TA47SKRT9ATJC9J.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/MGBJSUYLQLJYPH9E.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/SZ5YULJLKZ7E64FK2F.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/X3HAUS8LIBA8OISZTNBIBG.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/JT2_IQ36M2M@ZHX69L0.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ED3OX5C4ON7U617DKN.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/WQ7PHSVWBK6KJ60.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/R8GZNHFKH2NHC52O.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/QP9PWR4XGECU4HVOX9UTT.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/5R5MFKYTZ@K8ANYH59X.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/64QFGN7MCCMJ1O1TOM.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/OLPVDY8PGYWJCCGKNJV.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/EX6TV723_J6_FPT6.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/6_VS9ICP60G339TSQ9A.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/LGVA7U787LTEVLN54.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/CVDXZGXR3E3W3YGAJZ4C.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/KF1BI338ET_EB@FN5.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/D11EH7LT2CTL8F3Y3M.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/A7@LBZU6LPHTC_T.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/9K64MWXYGAO3840A28.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/S1SBMGXBJ@RWMBB@GU.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/8GCFM9_WGQA7KA6Z9ZCYP.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/34O3J5MAAFV8UINROQ33.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/7VTLV50RVFNX0CJ5W.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/R4CR9NPF34OBG2I@5O.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/RSVLTIXK7ZX6I0TJ.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/GCLAZMMRO9SNLP6HD.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/FV@XQFCN@SGRI3BFN87.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/1AVE3LTALJUEW72LV.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/RAA8KQGL2H6WOTDSF8D.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/AVT7EV6H0HM2WCWMVUF.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/QFXRMYKHS1K7MBBC2.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/32P8O53OK29@RWQF.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/XX1QFS7QKKZKVDAAB62.webp">
+<meta property="article:published_time" content="2023-02-08T07:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-09T17:53:20.452Z">
+<meta property="article:author" content="惜寞">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.lonesome.cn/blog/bytedance/TA47SKRT9ATJC9J.webp">
+  
+  
+  
+  <meta name="keywords" content="分布式">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="惜寞的无人小间" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+  
+    <link rel="shortcut icon" href="/assets/favicon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css" media="all" />
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="/assets/avatar.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/"><div class="main" ff="title">惜寞</div><div class="sub normal cap">无人小间</div><div class="sub hover cap" style="opacity:0"> An unoccupied room</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/"><span>博客</span></a><a class="nav-item" title="专栏" href="/topic/"><span>专栏</span></a><a class="nav-item" title="友链" href="/friends/"><span>友链</span></a><a class="nav-item" title="关于" href="/about/"><span>关于</span></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：第五届字节跳动青训营</span></div><div class="widget-body"><a class="item" href="/blog/bytedance-5th-youthcamp-backend/go-language-basics--basic-syntax/"><span class="title">Go语言基础——基础语法</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/go-language-advanced--engineering-advanced/"><span class="title">Go语言进阶——工程进阶</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/go-high-quality-programming-and-performance-optimization/"><span class="title">Go高质量编程与性能优化</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/go-language-memory-management-detailed-explanation/"><span class="title">Go语言内存管理详解</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/detailed-explanation-of-go-framework-three-piece-set(Web-RPC-ORM)/"><span class="title">Go框架三件套详解（Web/RPC/ORM）</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/rule-engine-design-and-implementation/"><span class="title">规则引擎设计与实现</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/a-preliminary-study-on-the-architecture--who-touched-my-cake/"><span class="title">架构初探——谁动了我的蛋糕</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/distribution-theory--the-cornerstone-of-modern-architecture/"><span class="title">分布式理论——现代架构基石</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/microservice-framework--immutable-infrastructure/"><span class="title">微服务框架——不变的基建</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/teach-you-step-by-step-how-to-do-system-design/"><span class="title">手把手教你做系统设计</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/black-and-gray-production-monitoring-and-defense/"><span class="title">黑灰产监控与防御</span></a><a class="item active" href="/blog/bytedance-5th-youthcamp-backend/distributed-scheduled-tasks/"><span class="title">分布式定时任务</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/message-queue-principle-and-practice/"><span class="title">消息队列原理与实战</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/rpc-principle-and-implementation/"><span class="title">RPC原理与实现</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/let-you-understand-the-essence-of-storage--status/"><span class="title">带你认识存储的本质——状态</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/mysql--in-depth-understanding-of-rdbms/"><span class="title">MySQL——深入理解RDBMS</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/redis--how-do-programmers-use-it/"><span class="title">Redis——大厂程序员是怎么用的</span></a><a class="item" href="/blog/bytedance-5th-youthcamp-backend/clickhouse--column-storage-you-haven%E2%80%99t-seen-before/"><span class="title">ClickHouse——你没有见过的列存储</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/blog/record/ubuntu-install-redis-and-configure-remote-connection/"><span class="title">Ubuntu 安装 Redis 并配置远程连接</span></a><a class="item title" href="/blog/record/ubuntu-install-mysql-and-configure-remote-connection/"><span class="title">Ubuntu 安装 MySQL 并配置远程连接</span></a><a class="item title" href="/blog/record/ubuntu-install-docker/"><span class="title">Ubuntu 安装 Docker</span></a><a class="item title" href="/blog/record/ubuntu-deploy-gin-and-vue-project/"><span class="title">Ubuntu 部署 Gin+Vue 前后端分离项目</span></a><a class="item title" href="/blog/record/docker-install-redis/"><span class="title">Docker 安装 Redis</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/blog/bytedance-5th-youthcamp-backend/go-language-basics--basic-syntax/">第五届字节跳动青训营</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-02-08T07:00:00.000Z">2023-02-08</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-08-09T17:53:20.452Z">2024-08-10</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>分布式定时任务</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/TA47SKRT9ATJC9J.webp"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="春节集卡瓜分-20-亿"><a href="#春节集卡瓜分-20-亿" class="headerlink" title="春节集卡瓜分 20 亿"></a>春节集卡瓜分 20 亿</h3><p>作为后端开发同学，怎样设计最终开奖环节技术方案？</p>
+<ul>
+<li>业务流程<ul>
+<li>定时扫描抖音用户集卡状态</li>
+<li>汇总计算用户的瓜分金额</li>
+<li>定时开奖</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/MGBJSUYLQLJYPH9E.webp"></li>
+</ul>
+</li>
+<li>技术体量<ul>
+<li>亿级用户规模</li>
+<li>十亿级资金规模</li>
+<li>百万级读写 QPS</li>
+</ul>
+</li>
+<li>方案引出<ul>
+<li>自动化 + 定时执行 + 海量数据 + 高效稳定 &#x3D; 分布式定时任务</li>
+</ul>
+</li>
+</ul>
+<h2 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h2><h3 id="发展历史"><a href="#发展历史" class="headerlink" title="发展历史"></a>发展历史</h3><h4 id="Windows-批处理"><a href="#Windows-批处理" class="headerlink" title="Windows 批处理"></a>Windows 批处理</h4><ul>
+<li>Case 1：10 分钟后 Windows 电脑自动关机<ul>
+<li>Step1：桌面空白处右键单机-新建-文本文档</li>
+<li>Step2：更改文件名和后缀为”自动关机.bat“</li>
+<li>Step3：修改文件内容为”Shutdown -s -t 600“，代表 10 分钟后关机</li>
+<li>Step4：双击运行该批处理文件，电脑将会在 10 分钟之后自动关机</li>
+</ul>
+</li>
+</ul>
+<h4 id="Windows-任务计划程序"><a href="#Windows-任务计划程序" class="headerlink" title="Windows 任务计划程序"></a>Windows 任务计划程序</h4><ul>
+<li>Case 2：每天 12:00 自动疫情打卡<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/SZ5YULJLKZ7E64FK2F.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/X3HAUS8LIBA8OISZTNBIBG.webp"></li>
+</ul>
+</li>
+</ul>
+<h4 id="Linux-命令-CronJob"><a href="#Linux-命令-CronJob" class="headerlink" title="Linux 命令-CronJob"></a>Linux 命令-CronJob</h4><ul>
+<li>Case 3：每天 02:30 定时清理机器日志<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/JT2_IQ36M2M@ZHX69L0.webp"></li>
+</ul>
+</li>
+<li>Linux 系统命令，使用简单，稳定可靠</li>
+<li>只能控制单台机器，且无法适用于其他操作系统</li>
+</ul>
+<h4 id="单机定时任务-Timer、Ticker"><a href="#单机定时任务-Timer、Ticker" class="headerlink" title="单机定时任务-Timer、Ticker"></a>单机定时任务-Timer、Ticker</h4><ul>
+<li>Case 4：每隔 5 分钟定时刷新本地缓存数据<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ED3OX5C4ON7U617DKN.webp"></li>
+</ul>
+</li>
+<li>跨平台</li>
+<li>仅单机可用</li>
+</ul>
+<h4 id="单机定时任务-ScheduledExecutorService"><a href="#单机定时任务-ScheduledExecutorService" class="headerlink" title="单机定时任务-ScheduledExecutorService"></a>单机定时任务-ScheduledExecutorService</h4><ul>
+<li>case 5：每隔 5 分钟定时执行多个任务<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/WQ7PHSVWBK6KJ60.webp"></li>
+</ul>
+</li>
+<li>拥有线程池功能</li>
+<li>仅单机可用</li>
+</ul>
+<h4 id="任务调度-Quartz"><a href="#任务调度-Quartz" class="headerlink" title="任务调度-Quartz"></a>任务调度-Quartz</h4><ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/R8GZNHFKH2NHC52O.webp"></li>
+<li>单任务极致控制</li>
+<li>没有负载均衡机制</li>
+</ul>
+<h4 id="分布式定时任务"><a href="#分布式定时任务" class="headerlink" title="分布式定时任务"></a>分布式定时任务</h4><ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/QP9PWR4XGECU4HVOX9UTT.webp"></li>
+<li>平台化管理</li>
+<li>分布式部署</li>
+<li>支持海量数据</li>
+</ul>
+<h3 id="分布式定时任务-1"><a href="#分布式定时任务-1" class="headerlink" title="分布式定时任务"></a>分布式定时任务</h3><ul>
+<li>定义<ul>
+<li>定时任务是指系统为了<strong>自动</strong>完成特定任务，<strong>实时、延时、周期</strong>性完成任务调度的过程</li>
+<li>分布式定时任务是把分散的、可靠性差的定时任务纳入统一的<strong>平台</strong>，并实现集群管理调度和<strong>分布式部署</strong>的一种定时任务的管理方式</li>
+</ul>
+</li>
+<li>按触发时机分类<ul>
+<li>定时任务：特定时间触发，比如今天 15:06 执行</li>
+<li>延时任务：延时触发，比如 10s 后执行</li>
+<li>周期任务：固定周期时间，或固定频率周期调度触发，比如每天 12 点或者每隔 5 秒执行</li>
+</ul>
+</li>
+<li>特点<ul>
+<li>自动化：全自动完成定时任务的调度和执行</li>
+<li>平台化：基于平台化的思维管控一系列的分布式定时任务</li>
+<li>分布式：在分布式系统环境下运行任务调度，突破单机定时任务的性能瓶颈</li>
+<li>伸缩性：采用集群方式部署，可以随时按需扩容</li>
+<li>高可用：单点故障不影响最终任务结果，可以做到故障转移</li>
+</ul>
+</li>
+<li>执行方式<ul>
+<li>单机任务：随机触发一台机器执行任务，适用于计算量小，并发度低的任务</li>
+<li>广播任务：广播到所有机器上执行同一个任务，比如所有机器一起清理日志</li>
+<li>Map 任务：一个任务可以分出多个子任务，每个子任务负责一部分的计算，适用于计算量大，单机无法满足要求的任务</li>
+<li>MapReduce 任务：在 Map 任务的基础上，还可以对所有子任务的结果做汇总计算，适用于计算量大，并且需要对子任务结果做汇总的任务</li>
+</ul>
+</li>
+<li>执行方式 vs 春节集卡<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/5R5MFKYTZ@K8ANYH59X.webp"></li>
+<li>发奖金额计算：MapReduce 任务</li>
+<li>定时开奖：Map 任务</li>
+</ul>
+</li>
+</ul>
+<h3 id="业内定时任务框架"><a href="#业内定时任务框架" class="headerlink" title="业内定时任务框架"></a>业内定时任务框架</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/64QFGN7MCCMJ1O1TOM.webp"></p>
+<h3 id="知识面扩充"><a href="#知识面扩充" class="headerlink" title="知识面扩充"></a>知识面扩充</h3><ul>
+<li>分布式定时任务 VS 单机定时任务<ul>
+<li>关系：<ul>
+<li>都可以实现自动化的定时、延时、周期任务调度</li>
+</ul>
+</li>
+<li>差异：<ul>
+<li>分布式定时任务可支撑更大的业务体量</li>
+<li>分布式定时任务的性能、伸缩性、稳定性更高</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分布式定时任务 VS 大数据处理引擎<ul>
+<li>关系：<ul>
+<li>都可以对海量数据做处理</li>
+<li>性能、伸缩性、稳定性都很高</li>
+</ul>
+</li>
+<li>差异：<ul>
+<li>定时并不是大数据处理引擎要解决的核心问题</li>
+<li>大数据引擎往往致力于将源数据处理成结果数据，分布式定时任务除了能做这个之外，还可以调用 HTTP 和 RPC 服务</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><ul>
+<li>分布式定时任务核心要解决<strong>触发、调度、执行</strong>三个关键问题<ul>
+<li>触发器：Trigger，解析任务，生成触发事件</li>
+<li>调度器：Scheduler，分配任务，管理任务生命周期</li>
+<li>执行器：Executor，获取执行任务单元，执行任务逻辑</li>
+</ul>
+</li>
+<li>除此之外，还需要提供一个控制台（Admin），提供任务管理和干预的功能</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/OLPVDY8PGYWJCCGKNJV.webp"></li>
+</ul>
+<h4 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h4><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/EX6TV723_J6_FPT6.webp"></p>
+<h4 id="功能架构"><a href="#功能架构" class="headerlink" title="功能架构"></a>功能架构</h4><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/6_VS9ICP60G339TSQ9A.webp"></p>
+<h3 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/LGVA7U787LTEVLN54.webp"></p>
+<ul>
+<li>任务：Job，任务元数据</li>
+<li>任务实例：JobInstance，任务运行的实例</li>
+<li>任务结果：JobResult，任务实例运行的结果</li>
+<li>任务历史：JobHistory，用户可以修改任务信息，任务实例对应的任务元数据可以不同，因而使用任务历史存储</li>
+</ul>
+<h4 id="任务元数据"><a href="#任务元数据" class="headerlink" title="任务元数据"></a>任务元数据</h4><p>任务元数据（Job）是用户对任务属性定义，包括任务类型调度时机、执行行为等</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/CVDXZGXR3E3W3YGAJZ4C.webp"></p>
+<h4 id="任务实例"><a href="#任务实例" class="headerlink" title="任务实例"></a>任务实例</h4><p>任务实例（JobInstance）是一个确定的 Job 的一次运行实例</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/KF1BI338ET_EB@FN5.webp"></p>
+<h3 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h3><h4 id="核心职责"><a href="#核心职责" class="headerlink" title="核心职责"></a>核心职责</h4><ul>
+<li>核心职责<ul>
+<li>给定一系列任务，解析他们的触发规则，在规定的时间点触发任务的调度</li>
+</ul>
+</li>
+<li>设计约束<ul>
+<li>需支持大量任务</li>
+<li>需支持秒级的调度</li>
+<li>周期任务需要多次执行</li>
+<li>需保证秒级扫描的高性能，并避免资源浪费</li>
+</ul>
+</li>
+</ul>
+<h4 id="方案-1"><a href="#方案-1" class="headerlink" title="方案 1"></a>方案 1</h4><p>定期扫描+延时消息（腾讯、字节方案）</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/D11EH7LT2CTL8F3Y3M.webp"></p>
+<h4 id="方案-2"><a href="#方案-2" class="headerlink" title="方案 2"></a>方案 2</h4><ul>
+<li>时间轮（Quartz 所用方案）<ul>
+<li>时间轮是一种高效利用线程资源进行批量化调度的一种调度模型，时间轮是一个存储环形队列，底层采用数组实现，数组中的每个元素可以存放一个定时任务列表</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/A7@LBZU6LPHTC_T.webp"></li>
+</ul>
+</li>
+<li>目标：遍历任务列表，从中找出当前时间点需触发的任务列表<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/9K64MWXYGAO3840A28.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/S1SBMGXBJ@RWMBB@GU.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/8GCFM9_WGQA7KA6Z9ZCYP.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/34O3J5MAAFV8UINROQ33.webp"></li>
+</ul>
+</li>
+</ul>
+<h4 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h4><ul>
+<li>核心问题<ul>
+<li>不同业务之间，任务的调度相互影响怎么办</li>
+<li>负责扫描和触发的机器挂了怎么办</li>
+</ul>
+</li>
+<li>解法思路<ul>
+<li>存储上，不同国别、业务做资源隔离</li>
+<li>运行时，不同国别、业务分开执行</li>
+<li>部署时，采用多机房集群化部署，避免单点故障，通过数据库锁或分布式锁保证任务只被触发一次</li>
+</ul>
+</li>
+</ul>
+<h5 id="问题引出"><a href="#问题引出" class="headerlink" title="问题引出"></a>问题引出</h5><ul>
+<li>单 Trigger 模式：<ul>
+<li>会有单点故障</li>
+<li>机器故障时平台崩溃</li>
+</ul>
+</li>
+<li>Trigger 集群模式<ul>
+<li>可避免单点故障</li>
+<li>需要避免同一任务被多次触发，导致业务紊乱</li>
+</ul>
+</li>
+</ul>
+<h5 id="数据库行锁模式"><a href="#数据库行锁模式" class="headerlink" title="数据库行锁模式"></a>数据库行锁模式</h5><p>在触发调度之前，更新数据库中 JobInstance 的状态，成功枪锁才会触发调度</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/7VTLV50RVFNX0CJ5W.webp"></p>
+<h5 id="分布式锁模式"><a href="#分布式锁模式" class="headerlink" title="分布式锁模式"></a>分布式锁模式</h5><p>在触发调度之前，尝试抢占分布式锁，可使用 Redis 锁或 Zookeeper 锁</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/R4CR9NPF34OBG2I@5O.webp"></p>
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><h4 id="资源来源"><a href="#资源来源" class="headerlink" title="资源来源"></a>资源来源</h4><ul>
+<li>业务系统提供机器资源<ul>
+<li>使用该方案的公司：<ul>
+<li>阿里、美团、字节等</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>任务执行逻辑与业务系统共用同一份资源，利用率更高</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>更容易发生定时任务脚本影响在线服务的事故</li>
+<li>不能由定时任务平台控制扩缩容</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>定时任务平台提供机器资源<ul>
+<li>使用该方案的公司：<ul>
+<li>字节等</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>任务执行逻辑与业务系统提供的在线服务隔离，避免相互影响</li>
+<li>可以支持优雅的扩缩容</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>消耗更多机器资源</li>
+<li>需要额外为定时任务平台申请接口调用权限，而不能直接继承业务系统的权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="资源调度"><a href="#资源调度" class="headerlink" title="资源调度"></a>资源调度</h4><h5 id="节点选择"><a href="#节点选择" class="headerlink" title="节点选择"></a>节点选择</h5><ul>
+<li>随机节点执行：选择集群中一个可用的执行节点执行调度任务，使用场景：定时对账</li>
+<li>广播执行：在集群中所有的执行节点发布调度任务并执行，使用场景：批量运维</li>
+<li>分片执行：按照用户自定义分片逻辑进行拆分，分发到集群中不同节点并行执行，提升资源利用效率，使用场景：海量日志统计</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/RSVLTIXK7ZX6I0TJ.webp"></li>
+</ul>
+<h5 id="任务分片"><a href="#任务分片" class="headerlink" title="任务分片"></a>任务分片</h5><p>通过任务分片来提高任务执行的效率和资源的利用率</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/GCLAZMMRO9SNLP6HD.webp"></p>
+<h4 id="高级特性"><a href="#高级特性" class="headerlink" title="高级特性"></a>高级特性</h4><h5 id="任务编排"><a href="#任务编排" class="headerlink" title="任务编排"></a>任务编排</h5><p>使用有向无环图 DAG（Directed Acyclic Graph）进行可视化任务编排</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/FV@XQFCN@SGRI3BFN87.webp"></p>
+<h5 id="故障转移"><a href="#故障转移" class="headerlink" title="故障转移"></a>故障转移</h5><p>确保部分执行单元任务失败时，任务最终成功</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/1AVE3LTALJUEW72LV.webp"></p>
+<h4 id="高可用-1"><a href="#高可用-1" class="headerlink" title="高可用"></a>高可用</h4><p>调度器可以集群部署，做到完全的无状态，靠消息队列的重试机制保障任务一定会被调度</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/RAA8KQGL2H6WOTDSF8D.webp"></p>
+<h3 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/AVT7EV6H0HM2WCWMVUF.webp"></p>
+<h2 id="业务应用"><a href="#业务应用" class="headerlink" title="业务应用"></a>业务应用</h2><p>所有需要定时、延时、周期性执行任务的业务场景，都可以考虑使用分布式定时任务</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/QFXRMYKHS1K7MBBC2.webp"></p>
+<ul>
+<li>其他解决方案<ul>
+<li>发货后超过 10 天未收货时系统自动确认收货<ul>
+<li>使用分布式定时任务的延时任务</li>
+<li>使用消息队列的延时消息或者定时消息</li>
+</ul>
+</li>
+<li>春节集卡活动统计完成集卡的用户个数和总翻倍数<ul>
+<li>使用分布式定时任务的 MapReduce 任务</li>
+<li>使用大数据离线处理引擎 Hive 离线做统计</li>
+<li>使用大数据实时处理引擎 Fink 实时做累计</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他解决方案对比<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/32P8O53OK29@RWQF.webp"></li>
+</ul>
+</li>
+</ul>
+<h2 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h2><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/XX1QFS7QKKZKVDAAB62.webp"></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://lonesome.cn/blog/bytedance-5th-youthcamp-backend/distributed-scheduled-tasks/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://lonesome.cn/blog/bytedance-5th-youthcamp-backend/distributed-scheduled-tasks/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/blog/bytedance-5th-youthcamp-backend/message-queue-principle-and-practice/">消息队列原理与实战</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/blog/bytedance-5th-youthcamp-backend/black-and-gray-production-monitoring-and-defense/">黑灰产监控与防御</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\blog\bytedance-5th-youthcamp-backend\distribution-theory--the-cornerstone-of-modern-architecture\" title="分布式理论——现代架构基石"><span class="title">分布式理论——现代架构基石</span></a><a class="item" href="\blog\bytedance-5th-youthcamp-backend\a-preliminary-study-on-the-architecture--who-touched-my-cake\" title="架构初探——谁动了我的蛋糕"><span class="title">架构初探——谁动了我的蛋糕</span></a></div></section></div>
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends">友链</a><a href="/about">关于我</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/">关于本站</a><a href="/https:/github.com/XiMo-210">GitHub</a></div></div><div class="text"><p>本站由 <a href="/">惜寞</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1">Stellar 1.29.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2022030617号-3</a></p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%A5%E8%8A%82%E9%9B%86%E5%8D%A1%E7%93%9C%E5%88%86-20-%E4%BA%BF"><span class="toc-text">春节集卡瓜分 20 亿</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="toc-text">发展历程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="toc-text">发展历史</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-%E6%89%B9%E5%A4%84%E7%90%86"><span class="toc-text">Windows 批处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E7%A8%8B%E5%BA%8F"><span class="toc-text">Windows 任务计划程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E5%91%BD%E4%BB%A4-CronJob"><span class="toc-text">Linux 命令-CronJob</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1-Timer%E3%80%81Ticker"><span class="toc-text">单机定时任务-Timer、Ticker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1-ScheduledExecutorService"><span class="toc-text">单机定时任务-ScheduledExecutorService</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6-Quartz"><span class="toc-text">任务调度-Quartz</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-text">分布式定时任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1-1"><span class="toc-text">分布式定时任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E5%86%85%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%A1%86%E6%9E%B6"><span class="toc-text">业内定时任务框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E9%9D%A2%E6%89%A9%E5%85%85"><span class="toc-text">知识面扩充</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-text">实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="toc-text">核心架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-text">数据流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%9E%B6%E6%9E%84"><span class="toc-text">功能架构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="toc-text">控制台</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%85%83%E6%95%B0%E6%8D%AE"><span class="toc-text">任务元数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%9E%E4%BE%8B"><span class="toc-text">任务实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-text">触发器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%81%8C%E8%B4%A3"><span class="toc-text">核心职责</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-1"><span class="toc-text">方案 1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-2"><span class="toc-text">方案 2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="toc-text">高可用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%BC%95%E5%87%BA"><span class="toc-text">问题引出</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%8C%E9%94%81%E6%A8%A1%E5%BC%8F"><span class="toc-text">数据库行锁模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%A8%A1%E5%BC%8F"><span class="toc-text">分布式锁模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="toc-text">调度器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E6%9D%A5%E6%BA%90"><span class="toc-text">资源来源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6"><span class="toc-text">资源调度</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E9%80%89%E6%8B%A9"><span class="toc-text">节点选择</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%86%E7%89%87"><span class="toc-text">任务分片</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7"><span class="toc-text">高级特性</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E7%BC%96%E6%8E%92"><span class="toc-text">任务编排</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="toc-text">故障转移</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8-1"><span class="toc-text">高可用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%99%A8"><span class="toc-text">执行器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8"><span class="toc-text">业务应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A"><span class="toc-text">课后作业</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    }
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
