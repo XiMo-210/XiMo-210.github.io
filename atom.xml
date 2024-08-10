@@ -33,9 +33,9 @@
     <category term="日常记录" scheme="https://lonesome.cn/categories/record/"/>
     
     
-    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
-    
     <category term="Docker" scheme="https://lonesome.cn/tags/Docker/"/>
+    
+    <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
     
   </entry>
   
@@ -56,9 +56,9 @@
     <category term="日常记录" scheme="https://lonesome.cn/categories/record/"/>
     
     
-    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
-    
     <category term="Docker" scheme="https://lonesome.cn/tags/Docker/"/>
+    
+    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
     
   </entry>
   
@@ -150,9 +150,9 @@
     <category term="日常记录" scheme="https://lonesome.cn/categories/record/"/>
     
     
-    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
-    
     <category term="Ubuntu" scheme="https://lonesome.cn/tags/Ubuntu/"/>
+    
+    <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
     
   </entry>
   
@@ -251,9 +251,9 @@
     <category term="字节青训营" scheme="https://lonesome.cn/categories/bytedance/"/>
     
     
-    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
     <category term="Redis" scheme="https://lonesome.cn/tags/Redis/"/>
+    
+    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -278,9 +278,9 @@
     <category term="字节青训营" scheme="https://lonesome.cn/categories/bytedance/"/>
     
     
-    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
     <category term="MySQL" scheme="https://lonesome.cn/tags/MySQL/"/>
+    
+    <category term="数据库" scheme="https://lonesome.cn/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
@@ -488,9 +488,9 @@
     <category term="字节青训营" scheme="https://lonesome.cn/categories/bytedance/"/>
     
     
-    <category term="架构" scheme="https://lonesome.cn/tags/%E6%9E%B6%E6%9E%84/"/>
-    
     <category term="分布式" scheme="https://lonesome.cn/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+    <category term="架构" scheme="https://lonesome.cn/tags/%E6%9E%B6%E6%9E%84/"/>
     
   </entry>
   
