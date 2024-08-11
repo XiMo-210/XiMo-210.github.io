@@ -1,0 +1,1017 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>微服务框架——不变的基建 - 惜寞的无人小间</title>
+
+  
+    <meta name="description" content="微服务架构介绍系统架构演变历史 为什么系统架构需要演进？ 互联网的爆炸性发展 硬件设施的快速发展 需求复杂性的多样化 开发人员的急剧增加 计算机理论及技术的发展   单体架构——all in one process 优势： 性能最高 冗余小   劣势： debug 困难 模块相互影响 模块分工、开发流程      垂直应用架构——按照业务线垂直划分 优势： 业务独立开发维护   劣势： 不同业务存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务框架——不变的基建">
+<meta property="og:url" content="https://lonesome.cn/posts/microservice-framework/index.html">
+<meta property="og:site_name" content="惜寞的无人小间">
+<meta property="og:description" content="微服务架构介绍系统架构演变历史 为什么系统架构需要演进？ 互联网的爆炸性发展 硬件设施的快速发展 需求复杂性的多样化 开发人员的急剧增加 计算机理论及技术的发展   单体架构——all in one process 优势： 性能最高 冗余小   劣势： debug 困难 模块相互影响 模块分工、开发流程      垂直应用架构——按照业务线垂直划分 优势： 业务独立开发维护   劣势： 不同业务存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/R6@2CVRSZT59ALDCOU.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/U1RDLA5T2E_IRJ3O8F.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/062KVW78B_VU5TLH6IRB.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/3K0@80O6G4HN74D6P5QN.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/FXDG@AA_N5XX1LC3AZPY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ENRZA6M65BMDKURKZ9G.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/FR73N095CQK69CUP2KI2.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/MCN5BDNTUQFNGBM0NJ.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/3V8VYAV9VWNAJZ7KCHQ3K.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/0XZJ8RXGPBJUTU1.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/@SGJW22462BDA0IYR.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/UD32_66BL0QVWZ532N.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/9QMFE_AYS8IUGFD94.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ZVJ@QNMW12CBNIS7FG0.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/H_ABI@U0AUVMV9RIY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/DAY68SDJE@@5XV0Z8TV6RD.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ONAXOM4H1ZCKLPZNRT.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/GEJ6PLBJZYB_046ZY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/VDCHYBB2_LXFPIKGJW.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/PMUO0XF3M67EMMJVS8.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/0MCMI_DVFP81D_BQX8K_B.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/54_SE96I__CPON_XE018.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/MB848D_15@LEWOZ2MD0S.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/3VGWLFTYV6J_1KHS_QNA.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/VF5SY31LX1OVD4ZMT8.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/WB8IJA@2VA99A7DIC.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/2KFOQU67PR@05NIO7MD1.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/PHM6_QTXWPTRANNM.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/IS0E@XJR9I4C5H1YJ4W.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/SVBCLW1BA7HR_O_2QEE.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/Q5YI_AIGKATKNAS4_BM.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/7P6U_HGS_24@5I07DDY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/EA0FK9MY6ZRY4PXP.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/6ANF_Z19_SQMWDZFI.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/SVBCLW1BA7HR_O_2QEE.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/5JJBVHO2QAXVIBQI.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/QCBPZYL5698S@BTMOX3.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/W_B@QGILNFUQ45CGZ4C.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/5I50PCM0CUQPRH0X6V.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/H81CI6@B0XYDN1VB.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/6EEG@MTM2FJGYA90YO8P1.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/TF0AT16OROXQBT_7Q9.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/G@NPN661EEHQGO_8A7E.webp">
+<meta property="article:published_time" content="2023-02-04T07:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-11T12:53:22.026Z">
+<meta property="article:author" content="惜寞">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.lonesome.cn/blog/bytedance/R6@2CVRSZT59ALDCOU.webp">
+  
+  
+  
+  <meta name="keywords" content="架构,微服务">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="惜寞的无人小间" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+  
+    <link rel="shortcut icon" href="/assets/favicon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css" media="all" />
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="/assets/avatar.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/"><div class="main" ff="title">惜寞</div><div class="sub normal cap">无人小间</div><div class="sub hover cap" style="opacity:0"> An unoccupied room</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/"><span>博客</span></a><a class="nav-item" title="专栏" href="/topic/"><span>专栏</span></a><a class="nav-item" title="友链" href="/friends/"><span>友链</span></a><a class="nav-item" title="关于" href="/about/"><span>关于</span></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：第五届字节跳动青训营</span></div><div class="widget-body"><a class="item" href="/posts/go-language-basics/"><span class="title">Go语言基础——基础语法</span></a><a class="item" href="/posts/go-language-advanced/"><span class="title">Go语言进阶——工程进阶</span></a><a class="item" href="/posts/go-high-quality-programming-and-performance-optimization/"><span class="title">Go高质量编程与性能优化</span></a><a class="item" href="/posts/go-memory-management/"><span class="title">Go语言内存管理详解</span></a><a class="item" href="/posts/go-framework-three-piece-set/"><span class="title">Go框架三件套详解（Web/RPC/ORM）</span></a><a class="item" href="/posts/rule-engine-design-and-implementation/"><span class="title">规则引擎设计与实现</span></a><a class="item" href="/posts/architecture-preliminary-exploration/"><span class="title">架构初探——谁动了我的蛋糕</span></a><a class="item" href="/posts/distribution-theory/"><span class="title">分布式理论——现代架构基石</span></a><a class="item active" href="/posts/microservice-framework/"><span class="title">微服务框架——不变的基建</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/posts/system-design/"><span class="title">手把手教你做系统设计</span></a><a class="item" href="/posts/black-and-gray-production-monitoring-and-defense/"><span class="title">黑灰产监控与防御</span></a><a class="item" href="/posts/distributed-scheduled-tasks/"><span class="title">分布式定时任务</span></a><a class="item" href="/posts/message-queue-principle-and-practice/"><span class="title">消息队列原理与实战</span></a><a class="item" href="/posts/rpc-principle-and-implementation/"><span class="title">RPC原理与实现</span></a><a class="item" href="/posts/the-essence-of-storage/"><span class="title">带你认识存储的本质——状态</span></a><a class="item" href="/posts/deep-understanding-of-rdbms/"><span class="title">MySQL——深入理解RDBMS</span></a><a class="item" href="/posts/how-top-tech-programmers-use-redis/"><span class="title">Redis——大厂程序员是怎么用的</span></a><a class="item" href="/posts/clickhouse-column-storage/"><span class="title">ClickHouse——你没有见过的列存储</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/ubuntu-deploy-gin-and-vue-project/"><span class="title">Ubuntu 部署 Gin+Vue 前后端分离项目</span></a><a class="item title" href="/posts/docker-install-redis/"><span class="title">Docker 安装 Redis</span></a><a class="item title" href="/posts/docker-install-mysql/"><span class="title">Docker 安装 MySQL</span></a><a class="item title" href="/posts/gin-simple-tutorial/"><span class="title">Gin 简易教程</span></a><a class="item title" href="/posts/gorm-simple-tutorial/"><span class="title">Gorm 简易教程</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/posts/go-language-basics/">第五届字节跳动青训营</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-02-04T07:00:00.000Z">2023-02-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-08-11T12:53:22.026Z">2024-08-11</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>微服务框架——不变的基建</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="微服务架构介绍"><a href="#微服务架构介绍" class="headerlink" title="微服务架构介绍"></a>微服务架构介绍</h2><h3 id="系统架构演变历史"><a href="#系统架构演变历史" class="headerlink" title="系统架构演变历史"></a>系统架构演变历史</h3><ul>
+<li>为什么系统架构需要演进？<ul>
+<li>互联网的爆炸性发展</li>
+<li>硬件设施的快速发展</li>
+<li>需求复杂性的多样化</li>
+<li>开发人员的急剧增加</li>
+<li>计算机理论及技术的发展</li>
+</ul>
+</li>
+<li>单体架构——all in one process<ul>
+<li>优势：<ul>
+<li>性能最高</li>
+<li>冗余小</li>
+</ul>
+</li>
+<li>劣势：<ul>
+<li>debug 困难</li>
+<li>模块相互影响</li>
+<li>模块分工、开发流程</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/R6@2CVRSZT59ALDCOU.webp"></li>
+</ul>
+</li>
+<li>垂直应用架构——按照业务线垂直划分<ul>
+<li>优势：<ul>
+<li>业务独立开发维护</li>
+</ul>
+</li>
+<li>劣势：<ul>
+<li>不同业务存在冗余</li>
+<li>每个业务还是单体</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/U1RDLA5T2E_IRJ3O8F.webp"></li>
+</ul>
+</li>
+<li>分布式架构——抽出与业务无关的公共模块<ul>
+<li>优势：<ul>
+<li>业务无关的独立服务</li>
+</ul>
+</li>
+<li>劣势：<ul>
+<li>服务模块 bug 可导致全站瘫痪</li>
+<li>调用关系复杂</li>
+<li>不同服务冗余</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/062KVW78B_VU5TLH6IRB.webp"></li>
+</ul>
+</li>
+<li>SOA 架构——面向服务<ul>
+<li>优势：<ul>
+<li>服务注册</li>
+</ul>
+</li>
+<li>劣势：<ul>
+<li>整个系统设计是中心化的</li>
+<li>需要从上至下设计</li>
+<li>重构困难</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/3K0@80O6G4HN74D6P5QN.webp"></li>
+</ul>
+</li>
+<li>微服务架构——彻底的服务化<ul>
+<li>优势：<ul>
+<li>开发效率</li>
+<li>业务独立设计</li>
+<li>自上而下</li>
+<li>故障隔离</li>
+</ul>
+</li>
+<li>劣势：<ul>
+<li>治理、运维难度</li>
+<li>观测挑战</li>
+<li>安全性</li>
+<li>分布式系统</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/FXDG@AA_N5XX1LC3AZPY.webp"></li>
+</ul>
+</li>
+</ul>
+<h3 id="微服务架构概览"><a href="#微服务架构概览" class="headerlink" title="微服务架构概览"></a>微服务架构概览</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ENRZA6M65BMDKURKZ9G.webp"></p>
+<h3 id="微服务架构核心要素"><a href="#微服务架构核心要素" class="headerlink" title="微服务架构核心要素"></a>微服务架构核心要素</h3><ul>
+<li>服务治理<ul>
+<li>服务注册</li>
+<li>服务发现</li>
+<li>负载均衡</li>
+<li>扩缩容</li>
+<li>流量治理</li>
+<li>稳定性治理</li>
+</ul>
+</li>
+<li>可观测性<ul>
+<li>日志采集</li>
+<li>日志分析</li>
+<li>监控打点</li>
+<li>监控大盘</li>
+<li>异常报警</li>
+<li>链路追踪</li>
+</ul>
+</li>
+<li>安全<ul>
+<li>身份验证</li>
+<li>认证授权</li>
+<li>访问令牌</li>
+<li>审计</li>
+<li>传输加密</li>
+<li>黑产攻击</li>
+</ul>
+</li>
+</ul>
+<h2 id="微服务架构原理及特征"><a href="#微服务架构原理及特征" class="headerlink" title="微服务架构原理及特征"></a>微服务架构原理及特征</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/FR73N095CQK69CUP2KI2.webp"></p>
+<ul>
+<li><p>服务（service）</p>
+<ul>
+<li>一组具有相同逻辑的运行实体</li>
+</ul>
+</li>
+<li><p>实例（instance）</p>
+<ul>
+<li>一个服务中，每个运行实体即为一个实例</li>
+</ul>
+</li>
+<li><p>实例与进程的关系</p>
+<ul>
+<li>实例与进程之间没有必然对应关系，一个实例可以对应一个或多个进程（反之不常见）</li>
+</ul>
+</li>
+<li><p>集群（cluster）</p>
+<ul>
+<li>通常指服务内部的逻辑划分，包含多个实例</li>
+</ul>
+</li>
+<li><p>常见的实例承载形式</p>
+<ul>
+<li>进程、VM、k8s pod……</li>
+</ul>
+</li>
+<li><p>有状态&#x2F;无状态服务</p>
+<ul>
+<li>服务的实例是否存储了可持久化的数据（例如磁盘文件）</li>
+</ul>
+</li>
+<li><p>服务间通信</p>
+<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/MCN5BDNTUQFNGBM0NJ.webp"></li>
+<li>对于单体服务，不同模块通信只是简单的函数调用</li>
+<li>对于微服务，服务间通信意味着网络传输</li>
+</ul>
+</li>
+</ul>
+<h3 id="服务注册与发现"><a href="#服务注册与发现" class="headerlink" title="服务注册与发现"></a>服务注册与发现</h3><ul>
+<li>问题：在代码层面，如何指定调用一个目标服务的地址（ip:port）？<ul>
+<li>直接指定 ip:port？<ul>
+<li>没有任何动态能力</li>
+<li>有多个实例下游实例怎么办？</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/3V8VYAV9VWNAJZ7KCHQ3K.webp"></li>
+</ul>
+</li>
+<li>使用 DNS？<ul>
+<li>本地 DNS 存在缓存，导致延迟</li>
+<li>负载均衡问题</li>
+<li>不支持服务探活检查</li>
+<li>域名无法配置端口</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/0XZJ8RXGPBJUTU1.webp"></li>
+</ul>
+</li>
+<li>解决思路：新增一个统一的服务注册中心，用于存储服务名到服务实例之间的映射关系<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/@SGJW22462BDA0IYR.webp"></li>
+</ul>
+</li>
+<li>服务实例上线及下线过程<ul>
+<li>旧服务实例下线前，从服务注册中心删除该实例，下线流量<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/UD32_66BL0QVWZ532N.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/9QMFE_AYS8IUGFD94.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ZVJ@QNMW12CBNIS7FG0.webp"></li>
+</ul>
+</li>
+<li>新服务实例上线后，在服务注册中心注册该实例，上线流量<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/H_ABI@U0AUVMV9RIY.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/DAY68SDJE@@5XV0Z8TV6RD.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ONAXOM4H1ZCKLPZNRT.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/GEJ6PLBJZYB_046ZY.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="流量特征"><a href="#流量特征" class="headerlink" title="流量特征"></a>流量特征</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/VDCHYBB2_LXFPIKGJW.webp"></p>
+<ul>
+<li>统一网关入口</li>
+<li>内网通信多数采用 RPC（Thrift, gRPC）</li>
+<li>网状调用链路</li>
+</ul>
+<h2 id="核心服务治理功能"><a href="#核心服务治理功能" class="headerlink" title="核心服务治理功能"></a>核心服务治理功能</h2><h3 id="服务发布"><a href="#服务发布" class="headerlink" title="服务发布"></a>服务发布</h3><ul>
+<li>服务发布（deployment）<ul>
+<li>让一个服务升级运行新的代码的过程</li>
+</ul>
+</li>
+<li>服务发布的难点<ul>
+<li>服务不可用<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/PMUO0XF3M67EMMJVS8.webp"></li>
+</ul>
+</li>
+<li>服务抖动<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/0MCMI_DVFP81D_BQX8K_B.webp"></li>
+</ul>
+</li>
+<li>服务回滚<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/54_SE96I__CPON_XE018.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>蓝绿部署<ul>
+<li>将服务分成两个部分，分别先后发布</li>
+<li>简单、稳定</li>
+<li>但需要两倍资源</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/MB848D_15@LEWOZ2MD0S.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/3VGWLFTYV6J_1KHS_QNA.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/VF5SY31LX1OVD4ZMT8.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/WB8IJA@2VA99A7DIC.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/2KFOQU67PR@05NIO7MD1.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/PHM6_QTXWPTRANNM.webp"></li>
+</ul>
+</li>
+<li>灰度发布（金丝雀发布）<ul>
+<li>先发布少部分实例，接着逐步增加发布比例</li>
+<li>不需要增加资源</li>
+<li>回滚难度大，基础设施要求高</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/IS0E@XJR9I4C5H1YJ4W.webp"></li>
+</ul>
+</li>
+</ul>
+<h3 id="流量治理"><a href="#流量治理" class="headerlink" title="流量治理"></a>流量治理</h3><p>在微服务架构中，可以基于地区、集群、实例、请求等维度，对端到端流量的路由路径进行精确控制</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/SVBCLW1BA7HR_O_2QEE.webp"></p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><ul>
+<li>负载均衡（Load Balance）负责分配请求在每个下游实例上的分布<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/Q5YI_AIGKATKNAS4_BM.webp"></li>
+</ul>
+</li>
+<li>常见的 LB 策略<ul>
+<li>Round Robin</li>
+<li>Random</li>
+<li>Ring Hash</li>
+<li>Least Request</li>
+</ul>
+</li>
+</ul>
+<h3 id="稳定性治理"><a href="#稳定性治理" class="headerlink" title="稳定性治理"></a>稳定性治理</h3><ul>
+<li>线上服务总是会出问题的，这与程序的正确性无关<ul>
+<li>网络攻击</li>
+<li>流量突增</li>
+<li>机房断电</li>
+<li>光纤被挖</li>
+<li>机器故障</li>
+<li>网络故障</li>
+<li>……</li>
+</ul>
+</li>
+<li>微服务架构中典型的稳定性治理功能<ul>
+<li>限流<ul>
+<li>限制服务处理的最大 QPS，拒绝过多请求</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/7P6U_HGS_24@5I07DDY.webp"></li>
+</ul>
+</li>
+<li>熔断<ul>
+<li>中断请求路径，增加冷却时间从而让故障实例尝试恢复</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/EA0FK9MY6ZRY4PXP.webp"></li>
+</ul>
+</li>
+<li>过载保护<ul>
+<li>在负载高的实例中，主动拒绝一部分请求，防止实例被打挂</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/6ANF_Z19_SQMWDZFI.webp"></li>
+</ul>
+</li>
+<li>降级<ul>
+<li>服务处理能力不足时，拒绝低级别的请求，只响应线上高优请求</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/SVBCLW1BA7HR_O_2QEE.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="字节跳动服务治理实践"><a href="#字节跳动服务治理实践" class="headerlink" title="字节跳动服务治理实践"></a>字节跳动服务治理实践</h2><h3 id="重试的意义"><a href="#重试的意义" class="headerlink" title="重试的意义"></a>重试的意义</h3><ul>
+<li>本地函数调用——通常没有重试意义<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/5JJBVHO2QAXVIBQI.webp"></li>
+<li>可能有哪些异常？<ul>
+<li>参数非法</li>
+<li>OOM（Out Of Memory）</li>
+<li>NPE（Null Pointer Expection）</li>
+<li>边界 case</li>
+<li>系统崩溃</li>
+<li>死循环</li>
+<li>程序异常退出</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>远程函数调用<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/QCBPZYL5698S@BTMOX3.webp"></li>
+<li>可能有哪些异常？<ul>
+<li>网络抖动</li>
+<li>下游负载高导致超时</li>
+<li>下游机器宕机</li>
+<li>本地机器负载高，调度超时</li>
+<li>下游熔断、限流</li>
+<li>……</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>重试的意义<ul>
+<li>重试可以避免掉偶发的错误，提高 SLA（Service-Level Agreement）<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/W_B@QGILNFUQ45CGZ4C.webp"></li>
+</ul>
+</li>
+<li>降低错误率<ul>
+<li>假设单次请求的错误概率为 0.01，那么连续两次错误概率则为 0.0001</li>
+</ul>
+</li>
+<li>降低长尾延时<ul>
+<li>对于偶尔耗时较长的请求，重试请求有机会提前返回</li>
+</ul>
+</li>
+<li>容忍暂时性错误<ul>
+<li>某些时候系统会有暂时性异常（例如网络抖动），重试可以尽量规避</li>
+</ul>
+</li>
+<li>避开下游故障实例<ul>
+<li>一个服务中可能会有少量实例故障（例如机器故障），重试其他实例可以成功</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="重试的难点"><a href="#重试的难点" class="headerlink" title="重试的难点"></a>重试的难点</h3><ul>
+<li>幂等性<ul>
+<li>多次请求可能会造成数据不一致</li>
+</ul>
+</li>
+<li>重试风暴<ul>
+<li>随着调用链路的增加，重试次数呈指数级上升</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/5I50PCM0CUQPRH0X6V.webp"></li>
+</ul>
+</li>
+<li>超时设置<ul>
+<li>假设调用时间一共 1s，经过多少时间开始重试？</li>
+</ul>
+</li>
+</ul>
+<h3 id="重试策略"><a href="#重试策略" class="headerlink" title="重试策略"></a>重试策略</h3><ul>
+<li>限制重试比例<ul>
+<li>设定一个重试比例阈值（例如 1%），重试次数占所有请求比例不超过该阈值</li>
+<li>重试只有在大部分请求都成功，只有少量请求失败时才有必要</li>
+<li>如果大部分请求都失败，重试只会加剧问题严重性</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/H81CI6@B0XYDN1VB.webp"></li>
+</ul>
+</li>
+<li>防止链路重试<ul>
+<li>链路层面的防重试风暴的核心是限制每层都发生重试，理想情况下只有最下一层发生重试</li>
+<li>可以返回特殊的 status code，表示“请求失败，但别重试”</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/6EEG@MTM2FJGYA90YO8P1.webp"></li>
+</ul>
+</li>
+<li>Hedged Requests<ul>
+<li>对于可能超时（或延时高）的请求，重新向另一个下游实例发送一个相同的请求，并等待先到达的响应</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/TF0AT16OROXQBT_7Q9.webp"></li>
+</ul>
+</li>
+</ul>
+<h3 id="重试效果验证"><a href="#重试效果验证" class="headerlink" title="重试效果验证"></a>重试效果验证</h3><p>实际验证经过上述重试策略后，在链路上发生的重试放大效应</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/G@NPN661EEHQGO_8A7E.webp"></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://lonesome.cn/posts/microservice-framework/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://lonesome.cn/posts/microservice-framework/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/system-design/">手把手教你做系统设计</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/distribution-theory/">分布式理论——现代架构基石</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\posts\distribution-theory\" title="分布式理论——现代架构基石"><span class="title">分布式理论——现代架构基石</span></a><a class="item" href="\posts\architecture-preliminary-exploration\" title="架构初探——谁动了我的蛋糕"><span class="title">架构初探——谁动了我的蛋糕</span></a><a class="item" href="\posts\clickhouse-column-storage\" title="ClickHouse——你没有见过的列存储"><span class="title">ClickHouse——你没有见过的列存储</span></a></div></section></div>
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends">友链</a><a href="/about">关于我</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/">关于本站</a><a href="/https:/github.com/XiMo-210">GitHub</a></div></div><div class="text"><p>本站由 <a href="/">惜寞</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1">Stellar 1.29.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2022030617号-3</a></p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E4%BB%8B%E7%BB%8D"><span class="toc-text">微服务架构介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8F%98%E5%8E%86%E5%8F%B2"><span class="toc-text">系统架构演变历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88"><span class="toc-text">微服务架构概览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E8%A6%81%E7%B4%A0"><span class="toc-text">微服务架构核心要素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86%E5%8F%8A%E7%89%B9%E5%BE%81"><span class="toc-text">微服务架构原理及特征</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0"><span class="toc-text">服务注册与发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81"><span class="toc-text">流量特征</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%8A%9F%E8%83%BD"><span class="toc-text">核心服务治理功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83"><span class="toc-text">服务发布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E6%B2%BB%E7%90%86"><span class="toc-text">流量治理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7%E6%B2%BB%E7%90%86"><span class="toc-text">稳定性治理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%AE%9E%E8%B7%B5"><span class="toc-text">字节跳动服务治理实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">重试的意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="toc-text">重试的难点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E7%AD%96%E7%95%A5"><span class="toc-text">重试策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E6%95%88%E6%9E%9C%E9%AA%8C%E8%AF%81"><span class="toc-text">重试效果验证</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    }
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>

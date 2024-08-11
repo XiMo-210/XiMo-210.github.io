@@ -1,0 +1,798 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>Ubuntu 安装 MySQL 并配置远程连接 - 惜寞的无人小间</title>
+
+  
+    <meta name="description" content="Ubuntu 安装 MySQL 并配置远程连接记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 安装 MySQL 并配置远程连接">
+<meta property="og:url" content="https://lonesome.cn/posts/ubuntu-install-mysql/index.html">
+<meta property="og:site_name" content="惜寞的无人小间">
+<meta property="og:description" content="Ubuntu 安装 MySQL 并配置远程连接记录">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/%7D$R%5D2DXU1%29SN_%28AG%5D5B90W7.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/url-SIeWkuuv8c6ERv3r.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825152339.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/H9nCE8Yq.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/url-IDI7IQUlrPQnNw09.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825153214.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/s5yRX0ih.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/5duzWs8r.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/CcyP3qLl.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/V7INkdDD.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/P8A9j8Aa.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/ShgYmSAY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825155820.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825160155.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/J_T8D9BD%60HFXU5E5LQHE0%7B4.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825175750.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825180256.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825182358.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825183859.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/%29%7D4J%5DMV405BP3QLORYL_A_W.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/%7BS03JJH24BI47W_DJ%7B2OB_L.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/lkdnflwelqfl.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826014853.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/G9C%29K50NNSME3D%5BN%7BLJ_OUG.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/hsu6Q8hz.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/mANsO1EA.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/dsydG4lP.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/OaEP42tR.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/A_BV%7DRX%28UR$VGJB1N%2808Y66.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/AgPmCexJ.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/@$H$@06%28B%5D%60ZCZ@$N4%7D9R$V.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/hsu6Q8hz.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/%5DTKB3%7B6I9W%60%60FD@J_0A1BYV.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/dsydG4lP.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/b5WrDFE0.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/eyTXwCw1.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/7G15spb7.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/9E2DV_AXTXM4HC9X%7DYNV759.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/X%60LWJI@_%5BCCR@94K%291N0A%28P.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826035630.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826035754.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826040253.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/ky1POFqj.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/vGyI9iT3.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/JISJICEU.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/R14YCN%29F%5DMK%2997@GX%7DF%601%60T.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/record/TYVWZ7KR1EX%60L%5BM7EA_EI%280.webp">
+<meta property="article:published_time" content="2023-08-25T20:56:07.000Z">
+<meta property="article:modified_time" content="2024-08-11T12:53:21.115Z">
+<meta property="article:author" content="惜寞">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Ubuntu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.lonesome.cn/blog/record/%7D$R%5D2DXU1%29SN_%28AG%5D5B90W7.webp">
+  
+  
+  
+  <meta name="keywords" content="MySQL,Ubuntu">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="惜寞的无人小间" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+  
+    <link rel="shortcut icon" href="/assets/favicon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css" media="all" />
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="/assets/avatar.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/"><div class="main" ff="title">惜寞</div><div class="sub normal cap">无人小间</div><div class="sub hover cap" style="opacity:0"> An unoccupied room</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/"><span>博客</span></a><a class="nav-item" title="专栏" href="/topic/"><span>专栏</span></a><a class="nav-item" title="友链" href="/friends/"><span>友链</span></a><a class="nav-item" title="关于" href="/about/"><span>关于</span></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/ubuntu-deploy-gin-and-vue-project/"><span class="title">Ubuntu 部署 Gin+Vue 前后端分离项目</span></a><a class="item title" href="/posts/docker-install-redis/"><span class="title">Docker 安装 Redis</span></a><a class="item title" href="/posts/docker-install-mysql/"><span class="title">Docker 安装 MySQL</span></a><a class="item title" href="/posts/gin-simple-tutorial/"><span class="title">Gin 简易教程</span></a><a class="item title" href="/posts/gorm-simple-tutorial/"><span class="title">Gorm 简易教程</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/record/">日常记录</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-08-25T20:56:07.000Z">2023-08-26</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-08-11T12:53:21.115Z">2024-08-11</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Ubuntu 安装 MySQL 并配置远程连接</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><ul>
+<li>本文环境<ul>
+<li>云服务器：腾讯云（不同厂商云服务器上的操作基本相同）</li>
+<li>系统：Ubuntu 22.04 LTS</li>
+<li>终端：<a target="_blank" rel="noopener" href="https://orcaterm.cloud.tencent.com/terminal">腾讯云 OrcaTerm</a>（可使用 Xshell+Xftp 代替）</li>
+</ul>
+</li>
+<li>本文全部 shell 终端指令均执行在 <strong>root</strong>  用户下（命令前的<code>sudo</code>可不加），如果是非 root 用户也许本文中某些没加<code>sudo</code>命令也要加上<code>sudo</code></li>
+</ul>
+<h2 id="一、安装-MySQL"><a href="#一、安装-MySQL" class="headerlink" title="一、安装 MySQL"></a>一、安装 MySQL</h2><h3 id="1-更新软件包列表"><a href="#1-更新软件包列表" class="headerlink" title="1.更新软件包列表"></a>1.更新软件包列表</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/%7D$R%5D2DXU1%29SN_%28AG%5D5B90W7.webp"></p>
+<h3 id="2-查看是否安装-MySQL"><a href="#2-查看是否安装-MySQL" class="headerlink" title="2.查看是否安装 MySQL"></a>2.查看是否安装 MySQL</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -l | grep mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/url-SIeWkuuv8c6ERv3r.webp"><br>如果输入上述命令后没有任何的输出（如上图），则说明没有安装 MySQL</p>
+<h3 id="3-安装-MySQL"><a href="#3-安装-MySQL" class="headerlink" title="3.安装 MySQL"></a>3.安装 MySQL</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install mysql-server</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825152339.webp"><br>这里列出了软件包的相关信息并询问你是否继续安装<br>输入<code>y</code>后回车确定继续安装<br>等待安装完后再输入第 2 步的命令查看 MySQL 是否已经安装<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/H9nCE8Yq.webp"><br>输出如上图，说明 MySQL 已经安装成功<br>安装的 MySQL 版本默认为当前 apt 源中最新的稳定版本，可以输入下面的命令查看 MySQL 版本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --version</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/url-IDI7IQUlrPQnNw09.webp"><br>注：写本文时的版本为 8.0.34</p>
+<h3 id="4-查看-MySQL-状态"><a href="#4-查看-MySQL-状态" class="headerlink" title="4.查看 MySQL 状态"></a>4.查看 MySQL 状态</h3><p>一旦安装完成，MySQL 服务将会自动启动，想要查看 MySQL 服务运行状态可以输入下面命令查看</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825153214.webp"><br>输出显示 MySQL 服务已经被启动，并且正在运行</p>
+<h3 id="5-启动、重启、停止-MySQL-服务的命令"><a href="#5-启动、重启、停止-MySQL-服务的命令" class="headerlink" title="5.启动、重启、停止 MySQL 服务的命令"></a>5.启动、重启、停止 MySQL 服务的命令</h3><p>上一步的命令可以用来查看 MySQL 服务的运行状态，下面是启动、重启、停止命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start mysql</span><br><span class="line"><span class="comment">## 停止</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl stop mysql</span><br><span class="line"><span class="comment">## 重启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart mysql</span><br></pre></td></tr></table></figure>
+
+<p>停止和启动命令的演示<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/s5yRX0ih.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/5duzWs8r.webp"></p>
+<h3 id="6-开机自启动设置（可选）"><a href="#6-开机自启动设置（可选）" class="headerlink" title="6.开机自启动设置（可选）"></a>6.开机自启动设置（可选）</h3><p>注：使用<code>systemd</code>管理服务，前提是使用 apt 安装的 MySQL<br>当前新版本的 MySQL 服务默认是开机自启动，可以通过前面的<code>sudo systemctl status mysql</code>命令查看<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/CcyP3qLl.webp"><br>该处的参数为<code>enabled</code>，说明当前 MySQL 服务是开机自启动<br>可以用下面命令关闭开机自启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/V7INkdDD.webp"><br>查看状态可以发现原本的<code>enabled</code>参数变成了<code>disabled</code>，说明 MySQL 服务不再是开机自启动<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/P8A9j8Aa.webp"><br>附上开启开机自启动的命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl enabled mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/ShgYmSAY.webp"><br>再次查看状态就可以发现又变回了<code>enabled</code></p>
+<h2 id="二、MySQL-安全配置向导"><a href="#二、MySQL-安全配置向导" class="headerlink" title="二、MySQL 安全配置向导"></a>二、MySQL 安全配置向导</h2><p>MySQL 安装文件时会附带一个名为<code>mysql_secure_installation</code>的脚本，我们可以通过运行该脚本提高 MySQL 的安全性</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825155820.webp"><br>这里有一个插件<code>VALIDATE PASSWORD PLUGIN</code>，它可以测试 MySQL 用户密码的强度，并且提高安全性，如果你想设置验证密码插件，按<code>y</code>回车后移动到下一个步骤<br><strong>注：如果不想设置复杂密码（比如想设置密码是 123456）的建议选择输入<code>n</code>不设置验证密码的插件，因为即使是下面的 LOW 策略也要求密码长度至少为 8 位（<del>安全性哪有方便重要</del>）</strong><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825160155.webp"><br>这里给出了低级，中级，高级三个级别的密码验证策略</p>
+<ul>
+<li>低级 长度 &gt;&#x3D; 8</li>
+<li>中级 在低级的基础上，需要同时包含数字，大小写字母和特殊字符</li>
+<li>高级 在中级的基础上，要求密码不能存在字典文件中</li>
+</ul>
+<p>可以输入对应级别前的数字进行选择，这边选择了 STRONG（即 2）<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/J_T8D9BD%60HFXU5E5LQHE0%7B4.webp"></p>
+<blockquote>
+<p>注：这里是输入 2 后回车，显示的上半部分内容，我在写本文时从网上找到的教程在这里都会有要你设置密码的一步，但是在新版本的 MySQL 是没有的，被上面这段话代替了，翻译过来的意思是：</p>
+<blockquote>
+<p>默认情况下，使用 auth_socket 进行身份验证，因此跳过为 root 用户设置密码。<br>如果你想改用密码身份验证，可以使用”ALTER_USER”命令进行设置。<br>请参考 <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/alter-user.html#alter-user-password-management">https://dev.mysql.com/doc/refman/8.0/en/alter-user.html#alter-user-password-management</a> 获取更多信息。</p>
+</blockquote>
+<p>这边仅做一个补充，为 root 用户设置密码的操作在第三部分会提到</p>
+</blockquote>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825175750.webp"><br>询问是否删除匿名用户，建议输入<code>y</code>删除</p>
+<ul>
+<li>在 MySQL 中，默认情况下会存在一个匿名用户（没有用户名和密码就可以登录），该用户具有一些基本的权限</li>
+<li>如果每个用户都有明确的身份和权限，可以更容易地追踪和监视数据库的活动，识别潜在的安全问题</li>
+<li>为了确保数据库仅允许经过授权的用户进行访问和操作，减少潜在的安全风险，建议删除匿名用户</li>
+</ul>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825180256.webp"><br>询问是否禁止 root 远程登录，根据自己需求选择，如果你想要使用 root 用户远程连接 MySQL 数据库，可以输入任意键跳过该设置<br>出于安全考虑，建议输入<code>y</code>禁止</p>
+<ul>
+<li>root 是 MySQL 数据库的超级管理员，拥有最高权限，一旦泄露后果非常严重，禁止 root 用户远程登录可以降低潜在的风险</li>
+<li>更推荐的做法是创建一个普通用户，并为其授予适当的权限，以便远程访问数据库，这样做可以限制对数据库的访问权限，并提供额外的安全层</li>
+<li>禁止 root 用户远程登录还可以防止意外的操作或误操作</li>
+</ul>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825182358.webp"><br>询问是否删除 test 数据库，输入<code>y</code>删除<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230825183859.webp"><br>询问是否重新加载权限表，输入<code>y</code>重新加载<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/%29%7D4J%5DMV405BP3QLORYL_A_W.webp"><br>Success.<br>All done!</p>
+<h2 id="三、修改-root-用户验证方式（可选）"><a href="#三、修改-root-用户验证方式（可选）" class="headerlink" title="三、修改 root 用户验证方式（可选）"></a>三、修改 root 用户验证方式（可选）</h2><p>在 MySQL 5.7（及更高版本）的 Ubuntu 系统中，root 用户默认使用 auth_socket 插件授权，而不是通过密码进行身份验证（即使输入了密码也不会验证），但这并不意味着安全性降低，因为他有两个限制：</p>
+<ul>
+<li>只能用 UNIX 的 socket 方式登陆，这就保证了只能本地登陆，用户在使用这种登陆方式时已经通过了操作系统的安全验证</li>
+<li>操作系统的用户和 MySQL 数据库的用户名必须一致，如果你要登陆 MySQL 的 root 用户，必须使用操作系统的 root 用户</li>
+</ul>
+<p>在多数情况下，这可以获得更高的安全性和可用性，但也会阻碍你使用外部程序（如 phpMyAdmin）访问数据库，或者是想使用 root 用户远程连接数据库等<br>对此有两种解决方案：</p>
+<ul>
+<li>将身份验证方式从 auth_socket 修改为 caching_sha2_password（即使用密码验证 root 用户）<ul>
+<li>我在写本文时从网上找到的教程都是修改为 mysql_native_password，主要原因是因为 caching_sha2_password 在 MySQL 8.0.3 才开始引入，并且由老版本升级为新版本时会出现一些问题</li>
+<li>但相比于 mysql_native_password，caching_sha2_password 的安全性更高，从 MySQL 8.0.4 开始，此插件成为 MySQL 服务器的新默认身份验证插件</li>
+<li>因为我们安装的是新版的 MySQL，所以我更建议使用 caching_sha2_password</li>
+</ul>
+</li>
+<li>创建一个新的管理用户，拥有所有数据库的访问权限</li>
+</ul>
+<h3 id="1-使用-root-身份登录-MySQL"><a href="#1-使用-root-身份登录-MySQL" class="headerlink" title="1.使用 root 身份登录 MySQL"></a>1.使用 root 身份登录 MySQL</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/%7BS03JJH24BI47W_DJ%7B2OB_L.webp"><br>登入成功后输出如上图</p>
+<h3 id="2-查看不同用户使用的身份验证方法"><a href="#2-查看不同用户使用的身份验证方法" class="headerlink" title="2.查看不同用户使用的身份验证方法"></a>2.查看不同用户使用的身份验证方法</h3><p>输入下面的命令查看数据库对不同用户使用的身份验证方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT user,authentication_string,plugin,host FROM mysql.user;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/lkdnflwelqfl.webp"><br>可以看到 root 用户确实是使用的 auth_socket 插件进行身份验证，并且密码为空</p>
+<h3 id="方案一：修改身份验证方式"><a href="#方案一：修改身份验证方式" class="headerlink" title="方案一：修改身份验证方式"></a>方案一：修改身份验证方式</h3><h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><p>输入下面命令将 root 用户的身份验证方式 auth_socket 修改成 caching_sha2_password，并设置登录的密码（包含在单引号之间）<br>注：需要满足在安全配置向导中选择的密码强度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED WITH caching_sha2_password BY &#x27;your_password&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826014853.webp"><br>如果设置的密码不满足之前选择的强度则会报下图的错误<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/G9C%29K50NNSME3D%5BN%7BLJ_OUG.webp"><br>最后输入下面命令，重新加载授权表并将更改更新到 MySQL 数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/hsu6Q8hz.webp"><br>完成后，再次运行以下命令确认 root 用户不再使用 auth_socket 进行身份验证</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT user,authentication_string,plugin,host FROM mysql.user;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/mANsO1EA.webp"><br>从上图中，我们可以看到 root 身份验证方式已经修改为 caching_sha2_password，即 root 用户可以使用密码作为验证方式登陆了</p>
+<h4 id="修改后登录"><a href="#修改后登录" class="headerlink" title="修改后登录"></a>修改后登录</h4><p>输入<code>exit</code>退出 MySQL<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/dsydG4lP.webp"><br>由于我们更改了 root 的身份验证方法，因此我们不能再使用之前的命令（即<code>sudo mysql</code>）登录 MySQL<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/OaEP42tR.webp"><br>我们在登陆时需要加上用户名和密码参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>-u 表示 user，-p 表示 password，当你按下回车后，服务器会要求你输入密码<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/A_BV%7DRX%28UR$VGJB1N%2808Y66.webp"><br>考虑到安全性，输入的密码不会在屏幕上显示出来，输入正确的密码后回车即可<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/AgPmCexJ.webp"><br>登录成功</p>
+<h3 id="方案二：创建新的管理用户（推荐）"><a href="#方案二：创建新的管理用户（推荐）" class="headerlink" title="方案二：创建新的管理用户（推荐）"></a>方案二：创建新的管理用户（推荐）</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><p>创建一个新的管理用户，并赋予所有数据库的访问权限<br>注：需要满足在安全配置向导中选择的密码强度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## 创建用户并设置密码</span><br><span class="line">CREATE USER &#x27;new_root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;your_password&#x27;;</span><br><span class="line">## 赋予用户所有权限</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO &#x27;new_root&#x27;@&#x27;localhost&#x27; WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/@$H$@06%28B%5D%60ZCZ@$N4%7D9R$V.webp"><br>输入下面命令，重新加载授权表并将更改更新到 MySQL 数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/hsu6Q8hz.webp"><br>查看创建用户的权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show grants for new_root@localhost;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/%5DTKB3%7B6I9W%60%60FD@J_0A1BYV.webp"><br><del>输出格式怪怪的，可能是终端的问题，但是问题不大</del><br>可以看到所有权限都被赋予了我们新创建的 new_root 用户，之后我们就能将该用户当作 root 用户使用</p>
+<h4 id="登录创建用户"><a href="#登录创建用户" class="headerlink" title="登录创建用户"></a>登录创建用户</h4><p>我们依旧可以使用<code>sudo mysql</code>命令登录 root 用户，但是现在我们想要登录新创建的 new_root 用户<br>输入<code>exit</code>退出 MySQL<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/dsydG4lP.webp"><br>我们在登陆时需要加上用户名和密码参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u new_root -p</span><br></pre></td></tr></table></figure>
+
+<p>-u 表示 user，-p 表示 password，当你按下回车后，服务器会要求你输入密码<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/b5WrDFE0.webp"><br>考虑到安全性，输入的密码不会在屏幕上显示出来，输入正确的密码后回车即可<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/eyTXwCw1.webp"><br>登录成功</p>
+<h2 id="四、配置远程连接"><a href="#四、配置远程连接" class="headerlink" title="四、配置远程连接"></a>四、配置远程连接</h2><p>先使用 root 身份登录 MySQL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## 没修改过 root 用户身份验证方式</span><br><span class="line">sudo mysql</span><br><span class="line">## 修改过 root 用户身份验证方式</span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><ul>
+<li>推荐的做法是创建一个普通用户，并为其授予适当的权限，用来远程访问数据库<ul>
+<li>该部分可以参考本文 <strong>修改 root 用户验证方式（可选）</strong> 中的 <strong>方案二：创建新的管理用户</strong> 部分</li>
+<li>不同的地方在于可以根据自己的实际情况赋予创建的用户权限，相关命令可以自行百度，<del>懒得写了</del></li>
+<li>如果暂时不清楚需要给什么权限，可以先赋予所有权限（跟着方案二即可），后续再修改</li>
+</ul>
+</li>
+<li>如果想要<strong>使用 root 用户进行远程连接</strong>，请先确保已经跟着方案一<strong>修改好了 root 用户的验证方式</strong></li>
+<li><strong>root 用户或者是自己新创建的用户，后续配置远程连接的操作都是一样的</strong>，这里用 root 用户进行演示，如果选择创建一个新的用户进行远程连接，将带有 root 用户名的部分都替换成新创建用户的用户名即可</li>
+</ul>
+<h3 id="1-修改-host"><a href="#1-修改-host" class="headerlink" title="1.修改 host"></a>1.修改 host</h3><p>查看 root 用户的 host</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT user,host FROM mysql.user;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/7G15spb7.webp"><br>如果 root 用户的 host 为<code>localhost</code>，表示只能在本地（该服务器内）登录 root 用户<br>修改  root  用户的 host  为<code>%</code><br>注：host 为<code>%</code>表示所有 ip 都有连接权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">## 使用名为 mysql 的数据库</span><br><span class="line">use mysql</span><br><span class="line">## 修改 host</span><br><span class="line">update user set host = &#x27;%&#x27; where user = &#x27;root&#x27;;</span><br><span class="line">## 刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/9E2DV_AXTXM4HC9X%7DYNV759.webp"><br>再次查看 root 用户的 host，确认已经修改为<code>%</code><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/X%60LWJI@_%5BCCR@94K%291N0A%28P.webp"></p>
+<h3 id="2-注释掉-bind-address"><a href="#2-注释掉-bind-address" class="headerlink" title="2.注释掉 bind-address"></a>2.注释掉 bind-address</h3><p>输入<code>exit</code>退出 MySQL，回到 Ubuntu 终端<br>使用 vim 查看编辑 MySQL 配置文件，输入下面命令后回车</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/mysql/mysql.conf.d/mysqld.cnf</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826035630.webp"><br>移动光标找到下图中标记的位置<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826035754.webp"><br>按下<code>i</code>进入 vim 的编辑模式（在英文输入法下）<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/Pasted%20image%2020230826040253.webp"><br>将该行（意思是只允许本地访问）注释掉（在前面加<code>#</code><br>然后按下<code>Esc</code>键退出编辑模式<br>再输入<code>:wq</code>（包括<code>:</code>号，在英文输入法下）后回车即保存退出</p>
+<h3 id="3-重启-mysql-服务"><a href="#3-重启-mysql-服务" class="headerlink" title="3.重启 mysql 服务"></a>3.重启 mysql 服务</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart mysql</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/ky1POFqj.webp"></p>
+<h3 id="4-云服务器放行-3306-端口"><a href="#4-云服务器放行-3306-端口" class="headerlink" title="4.云服务器放行 3306 端口"></a>4.云服务器放行 3306 端口</h3><p>在云服务器厂商找到对应云服务器的防火墙，并放行 3306 端口（MySQL 的默认端口）<br>这里以腾讯云为例，不同厂商基本都大同小异<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/vGyI9iT3.webp"><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/JISJICEU.webp"><br>有这样一条记录就说明 3306 端口已经放行了</p>
+<h3 id="5-测试连接"><a href="#5-测试连接" class="headerlink" title="5.测试连接"></a>5.测试连接</h3><p>本文使用 Navicat 测试连接云服务器上的 MySQL<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/R14YCN%29F%5DMK%2997@GX%7DF%601%60T.webp"><br>主机填你云服务器的 ip 地址<br>用户名填你用来进行远程连接的 MySQL 用户名<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/record/TYVWZ7KR1EX%60L%5BM7EA_EI%280.webp"><br>结束！</p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://lonesome.cn/posts/ubuntu-install-mysql/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://lonesome.cn/posts/ubuntu-install-mysql/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/ubuntu-install-redis/">Ubuntu 安装 Redis 并配置远程连接</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/gorm-simple-tutorial/">Gorm 简易教程</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\posts\deep-understanding-of-rdbms\" title="MySQL——深入理解RDBMS"><span class="title">MySQL——深入理解RDBMS</span></a><a class="item" href="\posts\docker-install-mysql\" title="Docker 安装 MySQL"><span class="title">Docker 安装 MySQL</span><span class="excerpt">Docker 安装 MySQL 记录</span></a><a class="item" href="\posts\ubuntu-install-docker\" title="Ubuntu 安装 Docker"><span class="title">Ubuntu 安装 Docker</span><span class="excerpt">Ubuntu 安装 Docker 记录</span></a><a class="item" href="\posts\ubuntu-deploy-gin-and-vue-project\" title="Ubuntu 部署 Gin+Vue 前后端分离项目"><span class="title">Ubuntu 部署 Gin+Vue 前后端分离项目</span><span class="excerpt">Ubuntu 部署 Gin+Vue 前后端分离项目记录</span></a><a class="item" href="\posts\docker-install-redis\" title="Docker 安装 Redis"><span class="title">Docker 安装 Redis</span><span class="excerpt">Docker 安装 Redis 记录</span></a></div></section></div>
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends">友链</a><a href="/about">关于我</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/">关于本站</a><a href="/https:/github.com/XiMo-210">GitHub</a></div></div><div class="text"><p>本站由 <a href="/">惜寞</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1">Stellar 1.29.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2022030617号-3</a></p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85-MySQL"><span class="toc-text">一、安装 MySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9B%B4%E6%96%B0%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%88%97%E8%A1%A8"><span class="toc-text">1.更新软件包列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85-MySQL"><span class="toc-text">2.查看是否安装 MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-MySQL"><span class="toc-text">3.安装 MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%9F%A5%E7%9C%8B-MySQL-%E7%8A%B6%E6%80%81"><span class="toc-text">4.查看 MySQL 状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%90%AF%E5%8A%A8%E3%80%81%E9%87%8D%E5%90%AF%E3%80%81%E5%81%9C%E6%AD%A2-MySQL-%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">5.启动、重启、停止 MySQL 服务的命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8%E8%AE%BE%E7%BD%AE%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-text">6.开机自启动设置（可选）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81MySQL-%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE%E5%90%91%E5%AF%BC"><span class="toc-text">二、MySQL 安全配置向导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E6%94%B9-root-%E7%94%A8%E6%88%B7%E9%AA%8C%E8%AF%81%E6%96%B9%E5%BC%8F%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-text">三、修改 root 用户验证方式（可选）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8-root-%E8%BA%AB%E4%BB%BD%E7%99%BB%E5%BD%95-MySQL"><span class="toc-text">1.使用 root 身份登录 MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E7%9C%8B%E4%B8%8D%E5%90%8C%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E7%9A%84%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95"><span class="toc-text">2.查看不同用户使用的身份验证方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E4%BF%AE%E6%94%B9%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E6%96%B9%E5%BC%8F"><span class="toc-text">方案一：修改身份验证方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-text">修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%90%8E%E7%99%BB%E5%BD%95"><span class="toc-text">修改后登录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-text">方案二：创建新的管理用户（推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA"><span class="toc-text">创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="toc-text">登录创建用户</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="toc-text">四、配置远程连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%AE%E6%94%B9-host"><span class="toc-text">1.修改 host</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%B3%A8%E9%87%8A%E6%8E%89-bind-address"><span class="toc-text">2.注释掉 bind-address</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%87%8D%E5%90%AF-mysql-%E6%9C%8D%E5%8A%A1"><span class="toc-text">3.重启 mysql 服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%94%BE%E8%A1%8C-3306-%E7%AB%AF%E5%8F%A3"><span class="toc-text">4.云服务器放行 3306 端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%B5%8B%E8%AF%95%E8%BF%9E%E6%8E%A5"><span class="toc-text">5.测试连接</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    }
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>

@@ -1,0 +1,993 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>MySQL——深入理解RDBMS - 惜寞的无人小间</title>
+
+  
+    <meta name="description" content="经典案例 从一场红包雨说起    RDBMS 事务 ACID 事务(Transaction)：是由一组 SQL 语句组成的一个程序执行单元（Unit），它需要满足 ACID 特性    ACID： 原子性(Atomicity)：事务是一个不可再分割的工作单元，事务中的操作要么都发生，要么都不发生 一致性(Consistency)：数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性 隔离性(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL——深入理解RDBMS">
+<meta property="og:url" content="https://lonesome.cn/posts/deep-understanding-of-rdbms/index.html">
+<meta property="og:site_name" content="惜寞的无人小间">
+<meta property="og:description" content="经典案例 从一场红包雨说起    RDBMS 事务 ACID 事务(Transaction)：是由一组 SQL 语句组成的一个程序执行单元（Unit），它需要满足 ACID 特性    ACID： 原子性(Atomicity)：事务是一个不可再分割的工作单元，事务中的操作要么都发生，要么都不发生 一致性(Consistency)：数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性 隔离性(">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ZEW16CSVEKU@SM10IR0JPI.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/2FVS4PX3SREBSTOL_V58.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/5TU_YNQEDKMA17YREL.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/56XYK56QIG0GRUG436.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/F091PF@MTFDPOP5FQOQ.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/@YJYQ32NE5W3WQ18C3J2.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/NKLRZFDXR0@BSO1ZTXC9.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/Y3AS7IBHF34F49MUVV.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/DWACJCWDRIVZ23ZYAPS.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/I@TYJV0_F@IF88_JAVB.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/BGK8K3HRU_JZSWJOSF5YI.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/M89HJZ5DFCTQ45WWGC.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/CDY81XGW5AK1T47SW6HE.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/RA@T_XGVQ8T54C_73F.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/JEHRBF7W0P3I4AMIUEI5.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/ANUJJ5MW5E1E@37OQU9.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/IX8HEIYE5Y3CKAIFD6.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/JI_PSRX64RWUZ_5VTXMVN.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/IL7VWM1OW6N@8LW@4.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/OOM4HXWSUIJ4OGBRM.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/9LRZMYRJAQZ9@JL.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/5B7FVB2M3VM48FYB0.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/BDAN4U@9LIF1M51549D.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/76FIP7OEWDIFLQ2ULM24NE.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/@V6T1NMDHVUQ7H1MY.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/V8X_Y3GRTIAY5X4_DJ.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/UKR1BW0Q4B8BT6Z6.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/XG_PRVEHBH5AJGE.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/13N89GLL1FTV2BWKETF.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/LNTJY320TBS3H@1L3L8OX.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/XN3R5VMNEFM_94.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/62FKKM3ZY48URE2R2PW.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/7S3G1OLVHYYC_55R.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/V74Z8ASO2Y7DY7C37DR.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/A1PP56F0BI8OMA00L.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/YKR7C8H6H7U71IJIUND5.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/8NQB5_V616@TOCTCZL9.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/TFBGJXV_S_CWURD8UL.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/O9J3XWP3IO6PA5T3M4.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/DBX19QOBV1YDSYLR.webp">
+<meta property="og:image" content="https://img.lonesome.cn/blog/bytedance/T_96F64E94360SHAG2L.webp">
+<meta property="article:published_time" content="2023-02-13T07:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-11T12:53:22.624Z">
+<meta property="article:author" content="惜寞">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.lonesome.cn/blog/bytedance/ZEW16CSVEKU@SM10IR0JPI.webp">
+  
+  
+  
+  <meta name="keywords" content="数据库,MySQL">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="惜寞的无人小间" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+  
+    <link rel="shortcut icon" href="/assets/favicon.png">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css" media="all" />
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="/assets/avatar.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></div><a class="title" href="/"><div class="main" ff="title">惜寞</div><div class="sub normal cap">无人小间</div><div class="sub hover cap" style="opacity:0"> An unoccupied room</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/"><span>博客</span></a><a class="nav-item" title="专栏" href="/topic/"><span>专栏</span></a><a class="nav-item" title="友链" href="/friends/"><span>友链</span></a><a class="nav-item" title="关于" href="/about/"><span>关于</span></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：第五届字节跳动青训营</span></div><div class="widget-body"><a class="item" href="/posts/go-language-basics/"><span class="title">Go语言基础——基础语法</span></a><a class="item" href="/posts/go-language-advanced/"><span class="title">Go语言进阶——工程进阶</span></a><a class="item" href="/posts/go-high-quality-programming-and-performance-optimization/"><span class="title">Go高质量编程与性能优化</span></a><a class="item" href="/posts/go-memory-management/"><span class="title">Go语言内存管理详解</span></a><a class="item" href="/posts/go-framework-three-piece-set/"><span class="title">Go框架三件套详解（Web/RPC/ORM）</span></a><a class="item" href="/posts/rule-engine-design-and-implementation/"><span class="title">规则引擎设计与实现</span></a><a class="item" href="/posts/architecture-preliminary-exploration/"><span class="title">架构初探——谁动了我的蛋糕</span></a><a class="item" href="/posts/distribution-theory/"><span class="title">分布式理论——现代架构基石</span></a><a class="item" href="/posts/microservice-framework/"><span class="title">微服务框架——不变的基建</span></a><a class="item" href="/posts/system-design/"><span class="title">手把手教你做系统设计</span></a><a class="item" href="/posts/black-and-gray-production-monitoring-and-defense/"><span class="title">黑灰产监控与防御</span></a><a class="item" href="/posts/distributed-scheduled-tasks/"><span class="title">分布式定时任务</span></a><a class="item" href="/posts/message-queue-principle-and-practice/"><span class="title">消息队列原理与实战</span></a><a class="item" href="/posts/rpc-principle-and-implementation/"><span class="title">RPC原理与实现</span></a><a class="item" href="/posts/the-essence-of-storage/"><span class="title">带你认识存储的本质——状态</span></a><a class="item active" href="/posts/deep-understanding-of-rdbms/"><span class="title">MySQL——深入理解RDBMS</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/posts/how-top-tech-programmers-use-redis/"><span class="title">Redis——大厂程序员是怎么用的</span></a><a class="item" href="/posts/clickhouse-column-storage/"><span class="title">ClickHouse——你没有见过的列存储</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/posts/ubuntu-deploy-gin-and-vue-project/"><span class="title">Ubuntu 部署 Gin+Vue 前后端分离项目</span></a><a class="item title" href="/posts/docker-install-redis/"><span class="title">Docker 安装 Redis</span></a><a class="item title" href="/posts/docker-install-mysql/"><span class="title">Docker 安装 MySQL</span></a><a class="item title" href="/posts/gin-simple-tutorial/"><span class="title">Gin 简易教程</span></a><a class="item title" href="/posts/gorm-simple-tutorial/"><span class="title">Gorm 简易教程</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/posts/go-language-basics/">第五届字节跳动青训营</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-02-13T07:00:00.000Z">2023-02-13</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-08-11T12:53:22.624Z">2024-08-11</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>MySQL——深入理解RDBMS</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ZEW16CSVEKU@SM10IR0JPI.webp"></p>
+<h2 id="经典案例"><a href="#经典案例" class="headerlink" title="经典案例"></a>经典案例</h2><ul>
+<li>从一场红包雨说起<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/2FVS4PX3SREBSTOL_V58.webp"></li>
+</ul>
+</li>
+<li>RDBMS 事务 ACID<ul>
+<li>事务(Transaction)：是由一组 SQL 语句组成的一个程序执行单元（Unit），它需要满足 ACID 特性<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/5TU_YNQEDKMA17YREL.webp"></li>
+</ul>
+</li>
+<li>ACID：<ul>
+<li>原子性(<strong>Atomicity</strong>)：事务是一个不可再分割的工作单元，事务中的操作要么都发生，要么都不发生</li>
+<li>一致性(<strong>Consistency</strong>)：数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性</li>
+<li>隔离性(<strong>Isolation</strong>)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果</li>
+<li>持久性(<strong>Durability</strong>)：在事务完成以后，该事务所对数据库所做的更改便持久的保存在数据库之中，并不会被回滚</li>
+</ul>
+</li>
+<li>红包雨 与 ACID<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/56XYK56QIG0GRUG436.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/F091PF@MTFDPOP5FQOQ.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/@YJYQ32NE5W3WQ18C3J2.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/NKLRZFDXR0@BSO1ZTXC9.webp"></li>
+</ul>
+</li>
+<li>红包雨 与 高并发<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/Y3AS7IBHF34F49MUVV.webp"></li>
+</ul>
+</li>
+<li>红包雨 与 高可靠<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/DWACJCWDRIVZ23ZYAPS.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="发展历史"><a href="#发展历史" class="headerlink" title="发展历史"></a>发展历史</h2><h3 id="前-DBMS-时代"><a href="#前-DBMS-时代" class="headerlink" title="前 DBMS 时代"></a>前 DBMS 时代</h3><ul>
+<li>人工管理<ul>
+<li>在现代计算机发明出来以前，通过人工的方式进行数据记录和管理</li>
+</ul>
+</li>
+<li>文件系统<ul>
+<li>1950s，现代计算机的雏形基本出现。1956 年 IBM 发布了第一个磁盘驱动器–Model 305 RAMAC，从此数据存储进入硬盘时代。在这个阶段，数据管理直接通过文件系统来实现</li>
+</ul>
+</li>
+</ul>
+<h3 id="DBMS-时代"><a href="#DBMS-时代" class="headerlink" title="DBMS 时代"></a>DBMS 时代</h3><ul>
+<li>1960s，传统的文件系统已经不能满足人们的需要，数据库管理系统（<strong>DBMS</strong>）应运而生</li>
+<li>DBMS：按照某种数据模型来组织、存储和管理数据的仓库</li>
+<li>所以通常按照数据模型的特点将传统数据库系统分成<strong>网状数据库</strong>、<strong>层次数据库</strong>和<strong>关系数据库</strong>三类</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/I@TYJV0_F@IF88_JAVB.webp"></li>
+</ul>
+<h3 id="DBMS-数据模型"><a href="#DBMS-数据模型" class="headerlink" title="DBMS 数据模型"></a>DBMS 数据模型</h3><ul>
+<li>网状模型<ul>
+<li>网状数据库所基于的网状数据模型建立的数据之间的联系，能反映现实世界中信息的关联，是许多空间对象的自然表达形式</li>
+<li>1964 年，世界上第一个数据库系统一集成数据存储（Integrated Data Storage，IDS）诞生于通用电气公司。1DS 是世界上第一个网状数据库，奠定了数据库发展的基础，在当时得到了广泛的应用。在 1970s 网状数据库系统十分流行，在数据库系统产品中占据主导地位</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/BGK8K3HRU_JZSWJOSF5YI.webp"></li>
+</ul>
+</li>
+<li>层次模型<ul>
+<li>1968 年，世界上第一个层次数据库一信息管理系统（Information Management System，IMS）诞生于于 IBM 公司，这也是世界上第一个大型商用的数据库系统。层次数据模型，即使用树形结构来描述实体及其之间关系的数据模型</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/M89HJZ5DFCTQ45WWGC.webp"></li>
+</ul>
+</li>
+<li>关系模型<ul>
+<li>1970 年，IBM 的研究员 E.F.Codd 博士发表了一篇名为“A Relational Model of Data for large Shared Data Banks”的论文，提出了关系模型的概念，奠定了关系模型的理论基础。1979 年 Oracle 首次将关系型数据库商业化，后续 DB2，SAP Sysbase ASE，and Informix 等知名数据库产品也纷纷面世</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/CDY81XGW5AK1T47SW6HE.webp"></li>
+</ul>
+</li>
+<li>优劣势<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/RA@T_XGVQ8T54C_73F.webp"></li>
+</ul>
+</li>
+</ul>
+<h3 id="SQL-语言"><a href="#SQL-语言" class="headerlink" title="SQL 语言"></a>SQL 语言</h3><ul>
+<li>1974 年 IBM 的 Ray Boycei 和 Don Chamberlin 将 Codd 关系数据库的 12 条准则的数学定义以简单的关键字语法表现出来，里程碑式地提出了 SQL(Structured Query Language)语言<ul>
+<li>语法风格接近自然语言</li>
+<li>高度非过程化</li>
+<li>面向集合的操作方式</li>
+<li>语言简洁，易学易用</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/JEHRBF7W0P3I4AMIUEI5.webp"></li>
+</ul>
+<h3 id="历史回顾"><a href="#历史回顾" class="headerlink" title="历史回顾"></a>历史回顾</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/ANUJJ5MW5E1E@37OQU9.webp"></p>
+<h2 id="关键技术"><a href="#关键技术" class="headerlink" title="关键技术"></a>关键技术</h2><h3 id="一条-SQL-的一生"><a href="#一条-SQL-的一生" class="headerlink" title="一条 SQL 的一生"></a>一条 SQL 的一生</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/IX8HEIYE5Y3CKAIFD6.webp"></p>
+<h3 id="SQL-引擎"><a href="#SQL-引擎" class="headerlink" title="SQL 引擎"></a>SQL 引擎</h3><ul>
+<li>Parser<ul>
+<li>解析器(Parser)一般分为词法分析(Lexical analysis)、语法分析(Syntax analysis))、语义分析(Semantic analyzer)等步骤</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/JI_PSRX64RWUZ_5VTXMVN.webp"></li>
+</ul>
+</li>
+<li>Optimizer<ul>
+<li>为什么需要一个优化器(Optimizer)？<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/IL7VWM1OW6N@8LW@4.webp"></li>
+</ul>
+</li>
+<li>基于规则的优化(<strong>RBO</strong> Rule Base Optimizer)<ul>
+<li>条件化简<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/OOM4HXWSUIJ4OGBRM.webp"></li>
+</ul>
+</li>
+<li>表连接优化<ul>
+<li>总是小表先进行连接</li>
+</ul>
+</li>
+<li>Scan 优化<ul>
+<li>唯一索引</li>
+<li>普通索引</li>
+<li>全表扫描</li>
+</ul>
+</li>
+<li>数据库索引：是数据库管理系统中辅助数据结构，以协助快速查询、更新数据库表中数据。目前数据库中最常用的索引是通过 B+树实现的</li>
+</ul>
+</li>
+<li>基于代价的优化(CBO Cost Base Optimizer)<ul>
+<li>一个查询有多种执行方案，CBO 会选择其中代价最低的方案去真正的执行</li>
+<li>什么是代价？<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/9LRZMYRJAQZ9@JL.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Executor<ul>
+<li>火山模型<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/5B7FVB2M3VM48FYB0.webp"></li>
+<li>每个 Operator 调用 Next 操作，访问下层 Operator，获得下层 Operator 返回的一行数据，经过计算之后，将这行数据返回给上层</li>
+<li>优点：<ul>
+<li>每个算子独立抽象实现，相互之间没有耦合，逻辑结构简单</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>每计算一条数据有多次函数调用开销，导致 CPU 效率不高</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>向量化<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/BDAN4U@9LIF1M51549D.webp"></li>
+<li>每个 ○perator 每次操作计算的不再是一行数据，而是一批数据(Batch N 行数据)，计算完成后向上层算子返回一个 Batch</li>
+<li>优点：<ul>
+<li>函数调用次数降低为 1&#x2F;N</li>
+<li>CPU cache 命中率更高</li>
+<li>可以利用 CPU 提供的 SIMD(Single Instruction Multi Data)机制</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>编译执行<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/76FIP7OEWDIFLQ2ULM24NE.webp"></li>
+<li>将所有的操作封装到一个函数里面，函数调用的代价也能大幅度降低</li>
+<li>用户 SQL 干变万化怎么办？难道要穷举用户的所有 SQL,给每一个 SQL 都预先写好一个执行函数吗？<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/@V6T1NMDHVUQ7H1MY.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h3><ul>
+<li>InnoDB<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/V8X_Y3GRTIAY5X4_DJ.webp"></li>
+<li>In-Memory：<ul>
+<li>Buffer Pool</li>
+<li>Change Buffer</li>
+<li>Adaptive Hash Index</li>
+<li>Log Buffer</li>
+</ul>
+</li>
+<li>On-Disk：<ul>
+<li>System Tablespace(ibdata1)</li>
+<li>General Tablespaces(xxx.ibd)</li>
+<li>Undo Tablespaces(xxx.ibu)</li>
+<li>Temporary Tablespaces(xxx.ibt)</li>
+<li>Redo Log(ib_logfileN)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Buffer Pool<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/UKR1BW0Q4B8BT6Z6.webp"></li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/XG_PRVEHBH5AJGE.webp"></li>
+</ul>
+</li>
+<li>Page<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/13N89GLL1FTV2BWKETF.webp"></li>
+</ul>
+</li>
+<li>B+ Tree<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/LNTJY320TBS3H@1L3L8OX.webp"></li>
+<li>页面内：<ul>
+<li>页目录中使用二分法快速定位到对应的槽，然后再遍历该槽对应分组中的记录即可快速找到指定的记录。</li>
+</ul>
+</li>
+<li>从根到叶：<ul>
+<li>中间节点存储</li>
+</ul>
+</li>
+<li>点查：<ul>
+<li>Select * from table wehre id &#x3D; 2000;</li>
+</ul>
+</li>
+<li>范围查询：<ul>
+<li>Select * from table wehre id &gt; 2000;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="事务引擎"><a href="#事务引擎" class="headerlink" title="事务引擎"></a>事务引擎</h3><ul>
+<li>Atomicity 与 Undo Log<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/XN3R5VMNEFM_94.webp"></li>
+<li>如何将数据库回退到修改之前的状态？<ul>
+<li>Undo Log<ul>
+<li>Undo Log 是<strong>逻辑日志</strong>，记录的是数据的<strong>增量变化</strong>。利用 Undo Log 可以进行事务回滚，从而保证事务的原子性。同时也实现了多版本并发控制(MVCC)，解决读写冲突和一致性读的问题</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/62FKKM3ZY48URE2R2PW.webp"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Isolation 与 锁<ul>
+<li>前情提要：羊老师从抖音抢了一个亿红包，又从头条抢了一个亿。抖音和头条都要往羊老师的账户转一个亿，如果两个操作同时进行，发生冲突怎么办？</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/7S3G1OLVHYYC_55R.webp"></li>
+</ul>
+</li>
+<li>Isolation 与 MVCC<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/V74Z8ASO2Y7DY7C37DR.webp"></li>
+<li>MVCC 的意义：<ul>
+<li>读写互补阻塞</li>
+<li>降低死锁概率</li>
+<li>实现一致性读</li>
+</ul>
+</li>
+<li>Undo Log 在 MVCC 的作用：<ul>
+<li>每个事务有一个单增的事务 ID</li>
+<li>数据页的行记录中包含了 DB_ROW_ID，DB_TRX_ID，DB_ROLL_PTR</li>
+<li>DB_ROLL_PTR 将数据行的所有快照记录都通过链表的结构串联了起来</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Durability 与 Redo Log<ul>
+<li>如何保证事务结束后，对数据的修改永久的保存？</li>
+<li>方案一：事务提交前页面写盘<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/A1PP56F0BI8OMA00L.webp"></li>
+<li>问题：随机 IO、写放大</li>
+</ul>
+</li>
+<li>方案二：WAL(Write-ahead logging)<ul>
+<li>redo log 是物理日志，记录的是页面的变化，它的作用是保证事务持久化。如果数据写入磁盘前发生故障，重启 MySQL 后会根据 redo log 重做</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="企业实践"><a href="#企业实践" class="headerlink" title="企业实践"></a>企业实践</h2><h3 id="春节红包雨挑战"><a href="#春节红包雨挑战" class="headerlink" title="春节红包雨挑战"></a>春节红包雨挑战</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/YKR7C8H6H7U71IJIUND5.webp"></p>
+<h3 id="大流量-Sharding"><a href="#大流量-Sharding" class="headerlink" title="大流量-Sharding"></a>大流量-Sharding</h3><ul>
+<li>问题背景<ul>
+<li>单节点写容易成为瓶颈</li>
+<li>单机数据容量上限</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>业务数据进行水平拆分</li>
+<li>代理层进行分片路由</li>
+</ul>
+</li>
+<li>实施效果<ul>
+<li>数据库写入能力扩展</li>
+<li>数据库容量线性扩展</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/8NQB5_V616@TOCTCZL9.webp"></li>
+</ul>
+<h3 id="流量突增"><a href="#流量突增" class="headerlink" title="流量突增"></a>流量突增</h3><ul>
+<li>扩容<ul>
+<li>问题背景<ul>
+<li>活动流量上涨</li>
+<li>集群性能不满足要求</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>扩容 DB 物理节点数量</li>
+<li>利用影子表进行压测</li>
+</ul>
+</li>
+<li>实施效果<ul>
+<li>数据库集群提供更高的吞吐</li>
+<li>保证集群可以承担预期流量</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/TFBGJXV_S_CWURD8UL.webp"></li>
+</ul>
+</li>
+<li>代理连接池<ul>
+<li>问题背景<ul>
+<li>突增流量导致大量建联</li>
+<li>大量建联导致负载变大，延时上升</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>业务侧预热连接池</li>
+<li>代理则预热连接池</li>
+<li>代理侧则支持连接队列</li>
+</ul>
+</li>
+<li>实施效果<ul>
+<li>避免 DB 被突增流量打死</li>
+<li>避免代理和 DB 被大量建联打死</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/O9J3XWP3IO6PA5T3M4.webp"></li>
+</ul>
+</li>
+</ul>
+<h3 id="稳定性-可靠性"><a href="#稳定性-可靠性" class="headerlink" title="稳定性&amp;可靠性"></a>稳定性&amp;可靠性</h3><ul>
+<li>3AZ 高可用<ul>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/DBX19QOBV1YDSYLR.webp"></li>
+</ul>
+</li>
+<li>HA 管理<ul>
+<li>问题背景<ul>
+<li>db 所在机器异常宕机</li>
+<li>db 节点异常宕机</li>
+</ul>
+</li>
+<li>解决方案<ul>
+<li>ha 服务监管、切换宕机节点</li>
+<li>代理支持配置热加载</li>
+<li>代理自动屏蔽宕机读节点</li>
+</ul>
+</li>
+<li>实施效果<ul>
+<li>读节点宕机秒级恢复</li>
+<li>写节点宕机 30s 内恢复服务</li>
+</ul>
+</li>
+<li><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img.lonesome.cn/blog/bytedance/T_96F64E94360SHAG2L.webp"></li>
+</ul>
+</li>
+</ul>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://lonesome.cn/posts/deep-understanding-of-rdbms/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://lonesome.cn/posts/deep-understanding-of-rdbms/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/how-top-tech-programmers-use-redis/">Redis——大厂程序员是怎么用的</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/the-essence-of-storage/">带你认识存储的本质——状态</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\posts\clickhouse-column-storage\" title="ClickHouse——你没有见过的列存储"><span class="title">ClickHouse——你没有见过的列存储</span></a><a class="item" href="\posts\how-top-tech-programmers-use-redis\" title="Redis——大厂程序员是怎么用的"><span class="title">Redis——大厂程序员是怎么用的</span></a><a class="item" href="\posts\the-essence-of-storage\" title="带你认识存储的本质——状态"><span class="title">带你认识存储的本质——状态</span></a><a class="item" href="\posts\docker-install-mysql\" title="Docker 安装 MySQL"><span class="title">Docker 安装 MySQL</span><span class="excerpt">Docker 安装 MySQL 记录</span></a><a class="item" href="\posts\go-memory-management\" title="Go语言内存管理详解"><span class="title">Go语言内存管理详解</span></a></div></section></div>
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends">友链</a><a href="/about">关于我</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/">关于本站</a><a href="/https:/github.com/XiMo-210">GitHub</a></div></div><div class="text"><p>本站由 <a href="/">惜寞</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1">Stellar 1.29.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2022030617号-3</a></p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B"><span class="toc-text">经典案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="toc-text">发展历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D-DBMS-%E6%97%B6%E4%BB%A3"><span class="toc-text">前 DBMS 时代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DBMS-%E6%97%B6%E4%BB%A3"><span class="toc-text">DBMS 时代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DBMS-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-text">DBMS 数据模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-%E8%AF%AD%E8%A8%80"><span class="toc-text">SQL 语言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E5%9B%9E%E9%A1%BE"><span class="toc-text">历史回顾</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="toc-text">关键技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%9D%A1-SQL-%E7%9A%84%E4%B8%80%E7%94%9F"><span class="toc-text">一条 SQL 的一生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-%E5%BC%95%E6%93%8E"><span class="toc-text">SQL 引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="toc-text">存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%BC%95%E6%93%8E"><span class="toc-text">事务引擎</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%81%E4%B8%9A%E5%AE%9E%E8%B7%B5"><span class="toc-text">企业实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%A5%E8%8A%82%E7%BA%A2%E5%8C%85%E9%9B%A8%E6%8C%91%E6%88%98"><span class="toc-text">春节红包雨挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E6%B5%81%E9%87%8F-Sharding"><span class="toc-text">大流量-Sharding</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E7%AA%81%E5%A2%9E"><span class="toc-text">流量突增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7-%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-text">稳定性&amp;可靠性</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    }
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
